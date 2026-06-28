@@ -1,0 +1,30 @@
+---
+import MonoEyebrow from './MonoEyebrow.astro';
+import PrimaryButton from './PrimaryButton.astro';
+import GhostButton from './GhostButton.astro';
+import { siteMeta } from '@/data/landing';
+---
+
+<section class="border-b border-border">
+  <div class="mx-auto max-w-4xl px-6 py-28 text-center">
+    <MonoEyebrow index="08" label="get started" />
+    <h2
+      class="mx-auto mt-5 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl"
+    >
+      Build agents from{' '}
+      <span class="relative inline-block">
+        methods
+        <span aria-hidden="true" class="absolute -bottom-1 left-0 right-0 h-[6px] bg-accent/40"
+        ></span>
+      </span>
+      , not prompts.
+    </h2>
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <PrimaryButton href={siteMeta.githubUrl}>View on GitHub →</PrimaryButton>
+      <GhostButton href="#demo">Try Packsmith demo</GhostButton>
+      <GhostButton href="#waitlist">Join the waitlist</GhostButton>
+    </div>
+  </div>
+</section>
+
+<section id="waitlist" class="sr-only" aria-label="Waitlist placeholder"></section>

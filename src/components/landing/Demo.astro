@@ -1,0 +1,63 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import CodeCard from './CodeCard.astro';
+import { demoStages } from '@/data/landing';
+---
+
+<section id="demo" class="border-b border-border">
+  <div class="mx-auto max-w-6xl px-6 py-24">
+    <SectionHeader
+      index="04"
+      eyebrow="demo"
+      title="Founder Playbook → Founder Pack"
+      lede="Airic uses Packsmith to convert an AI-native startup playbook into a Founder Demo Pack. This demo proves the core loop: a methodology can be extracted, executed, reviewed, and improved."
+    />
+    <div class="mt-12 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <ol class="space-y-px overflow-hidden rounded-lg border border-border bg-border">
+        {
+          demoStages.map((stage, i) => (
+            <li class="flex items-center gap-4 bg-card px-5 py-4 font-mono text-sm">
+              <span class="text-muted-foreground">{String(i + 1).padStart(2, '0')}</span>
+              <span class="text-foreground">{stage}</span>
+              {
+                i === 2 && (
+                  <span class="ml-auto rounded border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-accent-foreground">
+                    in progress
+                  </span>
+                )
+              }
+            </li>
+          ))
+        }
+      </ol>
+
+      <CodeCard title="session · founder-demo/03 customer-discovery">
+        <div class="space-y-3 text-foreground/90">
+          <div>
+            <span class="text-muted-foreground">$ </span>
+            airic run founder-demo --stage customer-discovery
+          </div>
+          <div class="text-muted-foreground">
+            → loading pack <span class="text-foreground">founder-demo</span>
+          </div>
+          <div class="text-muted-foreground">
+            → role <span class="text-foreground">interviewer</span> · process{' '}
+            <span class="text-foreground">discovery-loop</span>
+          </div>
+          <div class="rounded-md border border-border bg-background p-3">
+            <div class="text-xs uppercase tracking-wider text-muted-foreground">document</div>
+            <div class="mt-1 text-foreground">discovery/2026-w26-interviews.md</div>
+          </div>
+          <div class="text-muted-foreground">
+            → drafted 8 questions from{' '}
+            <span class="text-foreground">precedents/jtbd-framing.md</span>
+          </div>
+          <div class="text-muted-foreground">→ awaiting review …</div>
+          <div class="pt-2">
+            <span class="text-accent">✓</span> approved · committing patch
+          </div>
+        </div>
+      </CodeCard>
+    </div>
+  </div>
+</section>

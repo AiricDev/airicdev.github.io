@@ -1,0 +1,24 @@
+---
+import Logo from '@/components/Logo.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div
+    class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
+  >
+    <div class="flex items-center gap-2">
+      <Logo size="sm" href="/" />
+      <span>— methodology runtime</span>
+    </div>
+    <div class="flex gap-5">
+      <a href="https://github.com/airicdev" class="hover:text-foreground" target="_blank" rel="noopener noreferrer"
+        >github</a
+      >
+      <a href="/docs/" class="hover:text-foreground">docs</a>
+      <a href="#packsmith" class="hover:text-foreground">packsmith</a>
+      <span>MIT · {year}</span>
+    </div>
+  </div>
+</footer>

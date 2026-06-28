@@ -1,0 +1,24 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { audiences } from '@/data/landing';
+---
+
+<section class="border-b border-border bg-secondary/40">
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 py-24 lg:grid-cols-2">
+    <SectionHeader
+      index="07"
+      eyebrow="who it's for"
+      title="Built for hackers, researchers, and method builders."
+      lede="Airic is open-source and workspace-native. It works with ordinary files, Markdown specs, and git-friendly workflows — designed for people who want to understand, modify, and extend how their agents behave."
+    />
+    <div class="flex flex-wrap content-start gap-2">
+      {
+        audiences.map((a) => (
+          <span class="rounded-full border border-border-strong bg-card px-3 py-1.5 font-mono text-xs text-foreground">
+            {a}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>

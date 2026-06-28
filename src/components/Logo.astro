@@ -1,0 +1,45 @@
+---
+interface Props {
+  href?: string;
+  size?: 'sm' | 'md';
+  showWordmark?: boolean;
+  showBadge?: boolean;
+  class?: string;
+}
+
+const {
+  href = '/',
+  size = 'md',
+  showWordmark = true,
+  showBadge = false,
+  class: className = '',
+} = Astro.props;
+
+const iconSrc = size === 'sm' ? '/airic-icon-32.png' : '/airic-icon-64.png';
+const iconSize = size === 'sm' ? 20 : 28;
+---
+
+<a href={href} class:list={['group flex items-center gap-2.5', className]}>
+  <img
+    src={iconSrc}
+    alt=""
+    width={iconSize}
+    height={iconSize}
+    class="shrink-0"
+    loading="eager"
+  />
+  {
+    showWordmark && (
+      <>
+        <span class="font-mono text-sm font-semibold tracking-tight text-foreground group-hover:opacity-90">
+          airic
+        </span>
+        {showBadge && (
+          <span class="hidden font-mono text-[11px] text-muted-foreground sm:inline">
+            v0.1 · open source
+          </span>
+        )}
+      </>
+    )
+  }
+</a>

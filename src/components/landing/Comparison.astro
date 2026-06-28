@@ -1,0 +1,37 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { comparison } from '@/data/landing';
+---
+
+<section class="border-b border-border">
+  <div class="mx-auto max-w-6xl px-6 py-24">
+    <SectionHeader index="06" eyebrow="comparison" title="Not another black-box agent." />
+    <div class="mt-12 overflow-hidden rounded-lg border border-border">
+      <div class="grid grid-cols-2 border-b border-border bg-secondary">
+        <div class="px-6 py-3 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          Traditional agents
+        </div>
+        <div class="px-6 py-3 font-mono text-xs uppercase tracking-wider text-foreground">
+          <span class="inline-flex items-center gap-1.5">
+            <img src="/airic-icon-32.png" alt="" width="16" height="16" class="size-4" />
+            Airic
+          </span>
+        </div>
+      </div>
+      {
+        comparison.map(([a, b], i) => (
+          <div
+            class={`grid grid-cols-2 ${i < comparison.length - 1 ? 'border-b border-border' : ''}`}
+          >
+            <div class="px-6 py-4 text-sm text-muted-foreground line-through decoration-border-strong">
+              {a}
+            </div>
+            <div class="border-l border-border bg-card px-6 py-4 text-sm font-medium text-foreground">
+              {b}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

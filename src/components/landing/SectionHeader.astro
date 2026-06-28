@@ -1,0 +1,20 @@
+---
+import MonoEyebrow from './MonoEyebrow.astro';
+
+interface Props {
+  index: string;
+  eyebrow: string;
+  title: string;
+  lede?: string;
+}
+
+const { index, eyebrow, title, lede } = Astro.props;
+---
+
+<div class="max-w-3xl">
+  <MonoEyebrow index={index} label={eyebrow} />
+  <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+    {title}
+  </h2>
+  {lede && <p class="mt-4 text-base leading-relaxed text-muted-foreground">{lede}</p>}
+</div>

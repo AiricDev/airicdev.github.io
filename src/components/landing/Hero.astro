@@ -1,0 +1,91 @@
+---
+import MonoEyebrow from './MonoEyebrow.astro';
+import PrimaryButton from './PrimaryButton.astro';
+import GhostButton from './GhostButton.astro';
+import CodeCard from './CodeCard.astro';
+import { heroSessionSteps, siteMeta } from '@/data/landing';
+---
+
+<section class="relative border-b border-border">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 opacity-[0.35]"
+    style={{
+      backgroundImage: 'radial-gradient(var(--color-border-strong) 1px, transparent 1px)',
+      backgroundSize: '24px 24px',
+      maskImage: 'radial-gradient(ellipse at top, black 30%, transparent 75%)',
+    }}
+  >
+  </div>
+  <div
+    class="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pt-24"
+  >
+    <div>
+      <MonoEyebrow index="00" label="introducing airic" />
+      <h1 class="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
+        Turn methodology
+        <br />
+        into{' '}
+        <span class="relative inline-block">
+          executable agents
+          <span
+            aria-hidden="true"
+            class="absolute -bottom-1 left-0 right-0 h-[6px] bg-accent/40"
+          ></span>
+        </span>
+        .
+      </h1>
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+        Airic is an open-source methodology runtime that converts playbooks, SOPs, expert workflows,
+        and team practices into document-defined agent packs. Agents run the method, reflect on the
+        work, and propose improvements as human-reviewable Markdown diffs.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <PrimaryButton href={siteMeta.githubUrl}>View on GitHub →</PrimaryButton>
+        <GhostButton href="#demo">▶ Watch Packsmith demo</GhostButton>
+      </div>
+      <div
+        class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground"
+      >
+        <span>MIT licensed</span>
+        <span class="text-border-strong">·</span>
+        <span>Markdown-native</span>
+        <span class="text-border-strong">·</span>
+        <span>Git-friendly</span>
+        <span class="text-border-strong">·</span>
+        <span>Workspace-local</span>
+      </div>
+    </div>
+
+    <div class="grid gap-4">
+      <CodeCard title="~/project/.airic">
+        <pre class="text-foreground/90">{`.airic/
+├─ packs/
+│  ├─ packsmith/
+│  └─ founder-demo/
+└─ specs/
+   ├─ roles/
+   ├─ document-types/
+   ├─ processes/
+   └─ precedents/`}</pre>
+      </CodeCard>
+      <CodeCard title="session · founder-demo">
+        <div class="space-y-2.5">
+          {
+            heroSessionSteps.map(([k, v], i) => (
+              <div class="flex items-center gap-3">
+                <span class="w-5 text-right text-muted-foreground">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="text-accent">→</span>
+                <span class="text-foreground">{k}</span>
+                <span class="text-muted-foreground">·</span>
+                <span class="text-muted-foreground">{v}</span>
+              </div>
+            ))
+          }
+        </div>
+      </CodeCard>
+    </div>
+  </div>
+</section>

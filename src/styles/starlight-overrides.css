@@ -1,0 +1,88 @@
+/* Starlight uses an inverted gray scale in light mode:
+   - `--sl-color-white` = primary heading text (dark in light mode)
+   - `--sl-color-black` = page background (white in light mode)
+   - `--sl-color-gray-2` = sidebar link text */
+
+:root,
+:root[data-theme='dark'] {
+  --sl-font: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --paper: oklch(0.16 0.008 60);
+  --ink: oklch(0.96 0.008 80);
+
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: oklch(0.92 0.008 80);
+  --sl-color-gray-2: oklch(0.78 0.012 70);
+  --sl-color-gray-3: oklch(0.65 0.012 70);
+  --sl-color-gray-4: oklch(0.52 0.012 60);
+  --sl-color-gray-5: oklch(0.35 0.012 60);
+  --sl-color-gray-6: oklch(0.22 0.01 60);
+  --sl-color-black: oklch(0.12 0.008 60);
+
+  --sl-color-accent: oklch(0.78 0.16 65);
+  --sl-color-accent-low: oklch(0.28 0.08 60);
+  --sl-color-accent-high: oklch(0.88 0.14 65);
+
+  --sl-color-text: oklch(0.78 0.012 70);
+  --sl-color-text-accent: var(--sl-color-accent-high);
+  --sl-color-text-invert: var(--sl-color-accent-low);
+
+  --sl-color-bg: var(--sl-color-black);
+  --sl-color-bg-nav: oklch(0.18 0.008 60);
+  --sl-color-bg-sidebar: oklch(0.18 0.008 60);
+  --sl-color-bg-inline-code: oklch(0.26 0.012 60);
+  --sl-color-bg-accent: var(--sl-color-accent-high);
+
+  --sl-color-hairline-light: oklch(0.32 0.012 60);
+  --sl-color-hairline-shade: oklch(0.22 0.01 60);
+}
+
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+  --paper: oklch(0.985 0.006 85);
+  --ink: oklch(0.205 0.012 60);
+  --ink-muted: oklch(0.38 0.014 65);
+
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: oklch(0.22 0.012 60);
+  --sl-color-gray-2: oklch(0.34 0.014 65);
+  --sl-color-gray-3: oklch(0.44 0.014 65);
+  --sl-color-gray-4: oklch(0.54 0.014 65);
+  --sl-color-gray-5: oklch(0.82 0.012 75);
+  --sl-color-gray-6: oklch(0.94 0.01 80);
+  --sl-color-gray-7: var(--paper);
+  --sl-color-black: oklch(1 0 0);
+
+  --sl-color-accent: oklch(0.55 0.17 60);
+  --sl-color-accent-low: oklch(0.94 0.06 60);
+  --sl-color-accent-high: oklch(0.32 0.12 60);
+
+  --sl-color-text: oklch(0.28 0.012 60);
+  --sl-color-text-accent: var(--sl-color-accent);
+  --sl-color-text-invert: var(--paper);
+
+  --sl-color-bg: var(--paper);
+  --sl-color-bg-nav: var(--paper);
+  --sl-color-bg-sidebar: var(--paper);
+  --sl-color-bg-inline-code: oklch(0.955 0.01 80);
+  --sl-color-bg-accent: var(--sl-color-accent);
+
+  --sl-color-hairline-light: oklch(0.88 0.012 75);
+  --sl-color-hairline-shade: oklch(0.88 0.012 75);
+}
+
+.sl-markdown-content code {
+  font-family: var(--sl-font-mono);
+}
+
+/* Sidebar: ensure group labels and links stay readable */
+.sidebar-content a:hover,
+.sidebar-content a:focus {
+  color: var(--sl-color-white);
+}
+
+.sidebar-content summary .large,
+.sidebar-content .group-label .large {
+  color: var(--sl-color-white);
+}

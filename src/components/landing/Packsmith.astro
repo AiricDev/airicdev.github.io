@@ -1,0 +1,60 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import CodeCard from './CodeCard.astro';
+import { pipeline, packsmithInputs } from '@/data/landing';
+---
+
+<section id="packsmith" class="border-b border-border bg-secondary/40">
+  <div class="mx-auto max-w-6xl px-6 py-24">
+    <SectionHeader
+      index="03"
+      eyebrow="packsmith"
+      title="Packsmith: build packs from methods."
+      lede="Packsmith is the first Airic extension. It helps you extract a methodology from source material and turn it into a runnable Airic pack."
+    />
+
+    <div class="mt-12 overflow-x-auto rounded-lg border border-border bg-card p-6">
+      <div class="flex min-w-max items-center gap-2">
+        {
+          pipeline.map((step, i) => (
+            <div class="flex items-center gap-2">
+              <div class="rounded-md border border-border-strong bg-background px-3 py-2 font-mono text-xs text-foreground">
+                <span class="text-muted-foreground">0{i + 1} </span>
+                {step}
+              </div>
+              {i < pipeline.length - 1 && <span class="font-mono text-accent">→</span>}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-lg border border-border bg-card p-6">
+        <div class="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          example inputs
+        </div>
+        <ul class="mt-4 grid gap-2 font-mono text-sm text-foreground/90">
+          {
+            packsmithInputs.map((x) => (
+              <li class="flex items-center gap-3">
+                <span class="text-accent">▸</span>
+                {x}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <CodeCard title="my-method-pack/">
+        <pre class="text-foreground/90">{`my-method-pack/
+├─ README.md
+├─ roles/
+├─ document-types/
+├─ processes/
+├─ precedents/
+├─ tool-policies/
+└─ examples/`}</pre>
+      </CodeCard>
+    </div>
+  </div>
+</section>

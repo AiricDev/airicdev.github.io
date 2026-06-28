@@ -1,0 +1,35 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { scatteredSources } from '@/data/landing';
+---
+
+<section class="border-b border-border">
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 py-24 lg:grid-cols-2 lg:gap-16">
+    <SectionHeader
+      index="01"
+      eyebrow="the problem"
+      title="Agents are powerful. Methods are still trapped in documents."
+      lede="Modern agents can code, research, browse, and automate. But serious work still depends on methodology: how to frame problems, make decisions, review results, avoid failure modes, and improve over time."
+    />
+    <div class="space-y-6">
+      <p class="text-base leading-relaxed text-muted-foreground">
+        Today, that knowledge is scattered across books, PDFs, Notion pages, consulting decks,
+        SOPs, and expert memory. Skill systems can package procedures, but a real methodology is
+        more than one skill.
+      </p>
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {
+          scatteredSources.map((label) => (
+            <div class="rounded-md border border-dashed border-border-strong bg-card px-3 py-2 font-mono text-[12px] text-muted-foreground">
+              {label}
+            </div>
+          ))
+        }
+      </div>
+      <p class="font-mono text-xs text-muted-foreground">
+        <span class="text-accent">// </span>
+        roles · artifacts · processes · review standards · judgment · learning loops
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,59 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import CodeCard from './CodeCard.astro';
+import { reflectionQuestions } from '@/data/landing';
+---
+
+<section class="border-b border-border bg-secondary/40">
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 py-24 lg:grid-cols-[1fr_1.1fr]">
+    <div>
+      <SectionHeader
+        index="05"
+        eyebrow="reflection"
+        title="Self-improvement you can inspect."
+        lede="Airic does not silently update hidden memory. After work is done, Airic reflects on the process — and proposes changes as Markdown diffs you review and approve."
+      />
+      <ul class="mt-8 space-y-3 font-mono text-sm text-foreground/85">
+        {
+          reflectionQuestions.map((q) => (
+            <li class="flex gap-3">
+              <span class="text-accent">?</span>
+              {q}
+            </li>
+          ))
+        }
+      </ul>
+      <blockquote class="mt-10 border-l-2 border-accent pl-5 text-lg leading-snug text-foreground">
+        Airic learns by editing methodology documents —
+        <br />
+        <span class="text-muted-foreground">with human approval.</span>
+      </blockquote>
+    </div>
+
+    <CodeCard title="patch · precedents/jtbd-framing.md">
+      <pre class="overflow-x-auto whitespace-pre text-[12.5px]">
+        <span class="text-muted-foreground">{`@@ -12,6 +12,11 @@
+`}</span><span class="text-foreground/90">{`   When framing a customer problem,
+   always restate it as a Job-To-Be-Done
+   before generating solution candidates.
+
+`}</span><span class="block rounded-sm bg-diff-add px-1 text-diff-add-fg">+ ## Precedent (added 2026-06-27)</span><span class="block rounded-sm bg-diff-add px-1 text-diff-add-fg">+ If the user describes a workflow,</span><span class="block rounded-sm bg-diff-add px-1 text-diff-add-fg">+ extract the trigger, the desired</span><span class="block rounded-sm bg-diff-add px-1 text-diff-add-fg">+ outcome, and the current workaround</span><span class="block rounded-sm bg-diff-add px-1 text-diff-add-fg">+ before proposing any solution.</span><span class="block rounded-sm bg-diff-remove px-1 text-diff-remove-fg">- // TODO: revisit framing rules</span>
+      </pre>
+      <div class="mt-4 flex items-center gap-2 border-t border-border pt-4">
+        <span
+          class="rounded-md bg-foreground px-3 py-1.5 font-mono text-xs text-background"
+          aria-hidden="true"
+        >
+          Approve patch
+        </span>
+        <span
+          class="rounded-md border border-border-strong px-3 py-1.5 font-mono text-xs text-foreground"
+          aria-hidden="true"
+        >
+          Request changes
+        </span>
+        <span class="ml-auto font-mono text-[11px] text-muted-foreground">+5 −1 · 1 file</span>
+      </div>
+    </CodeCard>
+  </div>
+</section>
