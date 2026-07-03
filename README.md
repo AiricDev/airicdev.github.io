@@ -38,25 +38,55 @@ public/               # Favicons, OG image, web manifest
 
 Production site: **https://www.airic.dev**
 
-Push to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+Push to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds the site and deploys to Cloudflare Pages.
 
-### GitHub Pages setup
+### Cloudflare Pages setup
 
-1. Repository **Settings → Pages → Build and deployment**: set Source to **GitHub Actions**.
-2. **Settings → Pages → Custom domain**: enter `www.airic.dev` and save.
-3. Wait for DNS check to pass, then enable **Enforce HTTPS**.
+1. In the [Cloudflare dashboard](https://dash.cloudflare.com/), go to **Workers & Pages → Create → Pages → Connect to Git** (optional if you use the GitHub Action below) or create an empty project named `airic-site`.
+2. Add GitHub repository secrets (**Settings → Secrets and variables → Actions**):
+   - `CLOUDFLARE_API_TOKEN` — create a token with **Account → Cloudflare Pages → Edit** permission.
+   - `CLOUDFLARE_ACCOUNT_ID` — found on the Cloudflare dashboard overview page.
+3. In **Workers & Pages → airic-site → Custom domains**, add `www.airic.dev`.
 
-### DNS (at your domain registrar)
+Build settings (also used if you connect Git directly in Cloudflare instead of the Action):
 
-Point `www.airic.dev` to GitHub Pages:
+| Setting        | Value           |
+| -------------- | --------------- |
+| Framework      | Astro           |
+| Build command  | `npm run build` |
+| Output dir     | `dist`          |
+| Node version   | `22`            |
 
-| Type  | Name | Value              |
-| ----- | ---- | ------------------ |
-| CNAME | www  | `airicdev.github.io` |
+### DNS (Cloudflare)
 
-If you also want the apex `airic.dev` to redirect to `www`, configure that at your DNS provider (GitHub Pages does not serve apex CNAME directly; use your registrar's redirect or ALIAS/ANAME records).
+If `airic.dev` is on Cloudflare, add the custom domain in Pages and Cloudflare will create the required DNS records automatically.
 
-The workflow ships `public/CNAME` so GitHub Pages keeps the custom domain across deploys.
+To redirect the apex `airic.dev` to `www.airic.dev`, add a **Redirect Rule** in the Cloudflare dashboard (**Rules → Redirect Rules**):
+
+- If hostname equals `airic.dev`, redirect to `https://www.airic.dev${uri.path}` (301).
+
+### Manual deploy
+
+One-time login (opens browser):
+
+```bash
+npx wrangler login
+```
+
+Then deploy from your machine:
+
+```bash
+npm run deploy
+```
+
+Or step by step:
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name=airic-site
+```
+
+Alternatively, set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as environment variables instead of logging in.
 
 ## License
 
