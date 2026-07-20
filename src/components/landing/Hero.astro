@@ -1,91 +1,33 @@
 ---
-import MonoEyebrow from './MonoEyebrow.astro';
 import PrimaryButton from './PrimaryButton.astro';
-import GhostButton from './GhostButton.astro';
-import CodeCard from './CodeCard.astro';
-import { heroSessionSteps, siteMeta } from '@/data/landing';
 ---
 
-<section class="relative border-b border-border">
-  <div
-    aria-hidden="true"
-    class="pointer-events-none absolute inset-0 opacity-[0.35]"
-    style={{
-      backgroundImage: 'radial-gradient(var(--color-border-strong) 1px, transparent 1px)',
-      backgroundSize: '24px 24px',
-      maskImage: 'radial-gradient(ellipse at top, black 30%, transparent 75%)',
-    }}
-  >
-  </div>
-  <div
-    class="relative mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pt-24"
-  >
-    <div>
-      <MonoEyebrow index="00" label="introducing airic" />
-      <h1 class="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl">
-        Turn methodology
-        <br />
-        into{' '}
-        <span class="relative inline-block">
-          executable agents
-          <span
-            aria-hidden="true"
-            class="absolute -bottom-1 left-0 right-0 h-[6px] bg-accent/40"
-          ></span>
-        </span>
-        .
-      </h1>
-      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-        Airic is an open-source methodology runtime that converts playbooks, SOPs, expert workflows,
-        and team practices into document-defined agent packs. Agents run the method, reflect on the
-        work, and propose improvements as human-reviewable Markdown diffs.
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <PrimaryButton href={siteMeta.githubUrl}>View on GitHub →</PrimaryButton>
-        <GhostButton href="#demo">▶ Watch Packsmith demo</GhostButton>
+<section id="top" class="border-b border-border">
+  <div class="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:py-24 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-28">
+    <div class="flex flex-col justify-center">
+      <div class="mb-6 inline-flex self-start items-center gap-2 rounded-full border border-border bg-card px-3 py-1">
+        <span class="h-1.5 w-1.5 rounded-full bg-foreground"></span>
+        <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Coming soon · Open source</span>
       </div>
-      <div
-        class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground"
-      >
-        <span>MIT licensed</span>
-        <span class="text-border-strong">·</span>
-        <span>Markdown-native</span>
-        <span class="text-border-strong">·</span>
-        <span>Git-friendly</span>
-        <span class="text-border-strong">·</span>
-        <span>Workspace-local</span>
+      <h1 class="text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">A trainable<br />agent.</h1>
+      <p class="mt-6 max-w-xl text-xl font-medium text-foreground sm:text-2xl">Turn any methodology into a working agent.</p>
+      <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">Airic turns your methods into an agent operating model, then improves that model through real work, reflection, and review.</p>
+      <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <PrimaryButton href="#waitlist">Join the waitlist</PrimaryButton>
+        <a href="#how-it-learns" class="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground">See how Airic learns <span class="transition-transform group-hover:translate-y-0.5">↓</span></a>
       </div>
     </div>
-
-    <div class="grid gap-4">
-      <CodeCard title="~/project/.airic">
-        <pre class="text-foreground/90">{`.airic/
-├─ packs/
-│  ├─ packsmith/
-│  └─ founder-demo/
-└─ specs/
-   ├─ roles/
-   ├─ document-types/
-   ├─ processes/
-   └─ precedents/`}</pre>
-      </CodeCard>
-      <CodeCard title="session · founder-demo">
-        <div class="space-y-2.5">
-          {
-            heroSessionSteps.map(([k, v], i) => (
-              <div class="flex items-center gap-3">
-                <span class="w-5 text-right text-muted-foreground">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span class="text-accent">→</span>
-                <span class="text-foreground">{k}</span>
-                <span class="text-muted-foreground">·</span>
-                <span class="text-muted-foreground">{v}</span>
-              </div>
-            ))
-          }
-        </div>
-      </CodeCard>
+    <div class="rounded-lg border border-border bg-card p-6 sm:p-8">
+      <div class="mb-3 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-foreground"></span><span class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">01 · Onboard with knowledge</span></div>
+      <div class="grid grid-cols-3 gap-2 sm:gap-3">
+        {['A methodology book', 'Team handbook', 'Project playbook'].map((label) => <div class="rounded-md border border-border bg-background p-2.5 sm:p-3"><div class="mb-1.5 flex gap-0.5"><span class="h-1 w-4 rounded-full bg-muted-foreground/40"></span><span class="h-1 w-2 rounded-full bg-muted-foreground/40"></span></div><p class="font-mono text-[10px] leading-tight text-foreground">{label}</p></div>)}
+      </div>
+      <div class="my-3 text-center font-mono text-muted-foreground">↓</div>
+      <div class="mx-auto flex w-fit items-center gap-3 rounded-md border border-foreground bg-foreground px-5 py-2.5 text-background"><span class="h-2 w-2 rounded-sm bg-background"></span><span class="font-mono text-sm font-semibold tracking-wide">AIRIC</span></div>
+      <div class="my-3 text-center font-mono text-muted-foreground">↓</div>
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">{['Procedures', 'Standards', 'Checklists', 'Decision boundaries'].map((label) => <div class="rounded-md border border-border bg-background px-2.5 py-2"><p class="font-mono text-[10px] leading-tight text-foreground">{label}</p></div>)}</div>
+      <div class="mb-3 mt-8 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-foreground"></span><span class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">02 · Train through experience</span></div>
+      <div class="space-y-2">{['Real work', 'Reflection', 'Reviewed update', 'Better next task'].map((label, index) => <div class="flex items-center gap-3"><span class="font-mono text-[10px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span><div class="flex-1 rounded-md border border-border bg-background px-3 py-2"><p class="font-mono text-xs text-foreground">{label}</p></div>{index < 3 && <span class="font-mono text-xs text-muted-foreground">↓</span>}</div>)}</div>
     </div>
   </div>
 </section>

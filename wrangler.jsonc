@@ -1,5 +1,12 @@
 {
   "name": "airic-dev",
   "compatibility_date": "2026-01-01",
-  "pages_build_output_dir": "./dist"
+  "pages_build_output_dir": "./dist",
+  "d1_databases": [
+    {
+      "binding": "airic_waitlist",
+      "database_name": "airic-waitlist",
+      "database_id": "ea5a36e8-0d42-4561-b01a-dac7a1348fe0"
+    }
+  ]
 }

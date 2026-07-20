@@ -10,6 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=airic-dev",
+    "db:create": "wrangler d1 create airic-waitlist",
+    "db:migrate": "wrangler d1 migrations apply airic-waitlist --remote",
     "astro": "astro"
   },
   "dependencies": {

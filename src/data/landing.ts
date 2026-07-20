@@ -112,9 +112,9 @@ export const heroSessionSteps = [
 ] as const;
 
 export const siteMeta = {
-  title: 'Airic — Methodology runtime for document-defined agents',
+  title: 'Airic — A trainable agent',
   description:
-    'Airic is an open-source methodology runtime. Convert playbooks, SOPs, and expert workflows into document-defined agent packs you can run, reflect on, and improve.',
-  ogDescription: 'Turn methodology into executable agents. Document-defined, editable, versionable.',
+    'Airic turns your methods into an agent operating model, then improves that model through real work, reflection, and review.',
+  ogDescription: 'Turn any methodology into a working, trainable agent.',
   githubUrl: 'https://github.com/airicdev',
 } as const;

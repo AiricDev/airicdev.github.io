@@ -79,6 +79,30 @@ Then deploy from your machine:
 npm run deploy
 ```
 
+### Waitlist database
+
+The waitlist uses a Cloudflare Pages Function and D1. The static site remains static; only
+`POST /api/waitlist` runs at the edge to validate and store an email address.
+
+Set it up once through Wrangler:
+
+```bash
+npx wrangler login
+npm run db:create
+```
+
+Copy the returned `database_id` into the `airic_waitlist` D1 binding in
+`wrangler.jsonc`. Then create the table and deploy:
+
+```bash
+npm run db:migrate
+npm run deploy
+```
+
+The deployment needs an API token with **Cloudflare Pages: Edit** and **D1: Edit** permissions.
+The checked-in Wrangler configuration is the production binding configuration, so the existing
+GitHub Actions deployment will use `airic_waitlist` after the D1 database ID is committed.
+
 Or step by step:
 
 ```bash

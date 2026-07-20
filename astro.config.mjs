@@ -13,7 +13,7 @@ export default defineConfig({
     starlight({
       title: 'Airic',
       description:
-        'Airic is an open-source methodology runtime. Convert playbooks, SOPs, and expert workflows into document-defined agent packs.',
+        'Airic turns your methods into an agent operating model, then improves that model through real work, reflection, and review.',
       customCss: ['./src/styles/starlight-overrides.css'],
       logo: {
         light: './src/assets/airic-icon-light.png',
