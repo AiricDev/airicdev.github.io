@@ -6,15 +6,19 @@ import { siteMeta } from '@/data/landing';
 interface Props {
   title?: string;
   description?: string;
+  ogImagePath?: string;
+  ogType?: 'website' | 'article';
 }
 
 const {
   title = siteMeta.title,
   description = siteMeta.description,
+  ogImagePath = '/og.png',
+  ogType = 'website',
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://www.airic.dev');
-const ogImage = new URL('/og.png', site).href;
+const ogImage = new URL(ogImagePath, site).href;
 const canonicalUrl = new URL(Astro.url.pathname, site).href;
 ---
 
@@ -25,11 +29,13 @@ const canonicalUrl = new URL(Astro.url.pathname, site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={siteMeta.ogDescription} />
-    <meta property="og:type" content="website" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <link rel="canonical" href={canonicalUrl} />
     <HeadIcons />
