@@ -1,0 +1,263 @@
+---
+title: "Reflective Bootstrapping: How Agents Turn Practice into Institutional Knowledge"
+author:
+  - name: Lianghui Zhang
+    email: leric.zhang@gmail.com
+abstract: |
+  Practice is a source of knowledge. Even when work follows instructions closely, contact with the real world exposes what the instructions left unsaid or got wrong, and resolving these surprises produces new knowledge. The same holds for AI agents. An agent following a documented procedure may find that a tool needs a setting nobody mentioned, that a step is missing, or that the user expects something the instructions never stated. To finish the task, the agent has to work these problems out. What it learns in the process usually stays buried in its execution trace: later tasks do not benefit from it, and the people who delegated the work rarely hear about it. Reflective Bootstrapping (RB) is a process for turning such findings into reviewed, lasting changes to agent behavior, including changes to how the agent learns. Points of friction in a task mark episodes worth examining. Reflection lenses supply the questions to ask about them. The answer is recorded as a Knowledge Delta, a scoped statement of what was learned, and attribution ties it to a concrete proposal for change. Deterministic tools handle exact evidence lookup and edit construction, so reflection can concentrate on interpretation. Human review plays two roles. It decides what is adopted, and it lets knowledge flow in both directions: reviewers learn what the agent discovered, and they supply the context needed to judge what it means and how widely it applies. Accepted changes update the operating model that guides later work, and the recorded decisions become part of what the organization knows. This paper is a design proposal. We describe the mechanism, an agent skill that implements it, and an evaluation protocol covering the quality of what is learned, its effect on later work, human understanding, and cost. Empirical results are not yet available.
+keywords:
+  - learning from practice
+  - trajectory learning
+  - reflective learning
+  - operating model
+  - context routing
+  - self-improving systems
+  - human-AI collaboration
+  - agent governance
+bibliography: references.bib
+format:
+  pdf:
+    keep-tex: true
+  html:
+    toc: true
+    toc-depth: 3
+execute:
+  echo: false
+  warning: false
+---
+
+# Practice Produces Knowledge {#sec-introduction}
+
+People learn by doing. A procedure that looks complete on paper runs into an exception the first time someone uses it. A failed attempt reveals a constraint nobody had written down. An improvised fix that works becomes a method others can follow. Following instructions carefully does not prevent this: instructions describe the world as their authors understood it, and the world often turns out to be different. Doing the work is how we find out what our existing knowledge was missing, and resolving the surprises is how we add to it.
+
+More of this work is now delegated to AI agents, which puts them where plans meet reality. Agents call tools, work inside unfamiliar systems, run into constraints, and respond when people correct them. Along the way they learn things specific to the setting: what a tool actually requires, which assumptions do not hold in this environment, where a workflow needs an exception, and what guidance is missing. This knowledge may be new to a task, a project, or an organization even if it is not new to the world.
+
+Little of it survives in the final deliverable. A finished report does not show the export path that failed before it. A working patch does not reveal the misleading instruction that sent the agent looking in the wrong place. The trajectory records these discoveries, but once it is discarded, or kept only as an execution log, future work gains nothing from them.
+
+Reflective Bootstrapping (RB) aims to recover this value. It turns what an agent learns during its work into improvements that people can understand, review, and keep. Once people have reviewed and adopted these improvements, a lesson that one agent learned in one task becomes part of what the organization knows, available to later agents and to colleagues who were never involved in the original task.
+
+This paper is a design proposal. Its contributions are:
+
+1. a definition of the RB loop and its main concepts (@sec-bootstrapping, @sec-trajectory, @sec-reflection);
+2. an account of human review as both a governance step and a channel through which knowledge moves between agents and people, and from individual tasks into shared organizational knowledge (@sec-review);
+3. a reusable agent skill that implements the loop, and a protocol for evaluating it (@sec-evaluation).
+
+The claims about effectiveness are hypotheses for that evaluation. We have not yet collected empirical results.
+
+# Reflective Bootstrapping {#sec-bootstrapping}
+
+> Reflective Bootstrapping is a governed process in which agents turn experience from practice into lasting improvements to their behavior, including improvements to how they learn from experience.
+
+The process has six stages that form a loop (@fig-rb-loop). @tbl-rb-loop describes the role of each stage.
+
+```{mermaid}
+%%| label: fig-rb-loop
+%%| fig-cap: "The Reflective Bootstrapping loop. Solid arrows show the main cycle. The dashed arrow shows that review decisions, including rejections and corrections, become precedents for later reflection."
+flowchart LR
+  P[Practice] --> T[Trajectory]
+  T --> R[Reflection]
+  R --> I[Improvement<br/>proposal]
+  I --> H[Human review]
+  H --> C[Incorporation]
+  C --> P
+  H -.->|precedents| R
+```
+
+| Stage | Role in the learning loop |
+|---|---|
+| Practice | The agent acts in a real environment, guided by what it already knows. |
+| Trajectory | A record of actions, observations, tool results, and human interventions keeps the evidence of what happened. |
+| Reflection | The agent interprets informative episodes and states candidate lessons. |
+| Improvement proposal | Each lesson is traced to the responsible part of the agent's guidance and written up as a scoped change. |
+| Human review | People learn what the agent discovered, check its interpretation, and decide whether and where to adopt the change. |
+| Incorporation | Accepted changes become available to later work, whose outcomes provide evidence for the next round. |
+
+: The Reflective Bootstrapping loop. {#tbl-rb-loop}
+
+We call the persistent knowledge that governs how work gets done an *operating model*: the procedures, quality criteria, precedents, decision rights, and other guidance that shape how an organization acts. The term comes from management, where it describes how an organization turns its intentions into everyday work; we use it in a narrower sense that focuses on this guidance. The same operating model has different carriers. For people, it lives partly in their heads and partly in the organization's documents. For agents, it takes the form of instructions, skills, and other text files. These are different projections of the same thing, and an agent's files are the part of the operating model written down so that agents can act on it. RB changes this agent-facing part directly, where people can inspect it and keep it under version control, and through human review it also changes what people know. A proposal may revise an existing artifact, add missing knowledge, narrow a rule that has been applied too broadly, or change how relevant guidance is brought into context when it is needed (@sec-proposals).
+
+The loop is recursive because reflection is itself guided behavior. The questions it asks, the way it assigns causes, and its rules for generalizing all shape the proposals it produces. Those proposals, and what happens after they are adopted, become experience from which the learning method itself can improve. Changes to the method go through the same human review as changes to task-level guidance.
+
+# Knowledge in the Trajectory {#sec-trajectory}
+
+A trajectory records how a task was carried out: the request, the instructions in play, the actions attempted, what came back, the revisions made, and any human interventions. Even when only the final artifact is delivered, this record shows how well existing knowledge held up in practice. Throwing it away means losing the chance to see what the work has taught the system.
+
+Consider an illustrative export task. The agent follows the documented export procedure, gets an error, and retries. A person then points out that the destination has to be selected explicitly. Once the destination is selected, the export succeeds. The deliverable is the exported file. The trajectory additionally shows an expectation, a mismatch, a correction, and the result of acting on that correction.
+
+Several lessons could be drawn from this episode. The tool may require a destination in this configuration. The procedure may be missing a step. The instruction may already exist but may never have been loaded into the agent's context. Or the person's correction may reflect a local exception. Because the trajectory records what actually happened, it gives grounds for testing each explanation. Advice written without contact with the environment has no such grounding.
+
+Knowledge comes out of this interaction because each action changes what the agent can observe. A failed request exposes a constraint. A modified request tests a possible fix. Human feedback adds domain knowledge. A later success is evidence that the fix works. What the agent learns is therefore conditional: under these conditions, this action runs into this constraint, and this adjustment appears to resolve it. Reflection must keep those conditions attached when it decides what can carry over to other tasks.
+
+Successful work teaches as well. An agent may find a useful shortcut, an undocumented combination of tools, or a clearer way to divide responsibilities. Repeated searching may show that the system has the needed knowledge but cannot find it efficiently. Conflicting guidance may point to a decision the organization has not yet made. These are different kinds of lessons, and each may belong in a different place.
+
+A second illustrative case shows a lesson from a task that succeeded. An agent asked to add an API endpoint finally finds the team's naming conventions after a dozen searches, in a design note that the repository README never mentions. The endpoint is correct and nothing failed. Yet the next agent will repeat the same search unless something changes. The lesson here is not new content. The conventions already exist, and what is missing is a path to them.
+
+The trajectory also limits what can be inferred. Operational work rarely changes one variable at a time, and a retry may succeed only because something in the environment changed in the meantime. The final artifact alone cannot show which instructions the agent had during execution. If the relevant observations, source versions, and interventions are kept, a later reviewer can tell a lesson the evidence supports from an explanation that is plausible but untested.
+
+# The Reflection Mechanism {#sec-reflection}
+
+## Friction shows where to look {#sec-friction}
+
+*Friction* is any observable gap between how execution was expected to go and how it actually went. Retries, workarounds, repeated searches, unexpected branches, and human corrections are useful signals, because each marks a place where existing guidance failed to anticipate what happened.
+
+Reflection starts by reconstructing what was expected and examining where reality differed. In the export example, the documented procedure implied that the export was ready to run, while the error and the correction pointed to a missing prerequisite. Expectations can come from instructions, a plan, or a precedent. If an expectation has to be reconstructed after the fact, it should be labeled as such.
+
+Friction tells reflection where to look. It does not explain the cause, and not every case of friction should lead to a proposal. Unexpected successes and deliberate exploration are also worth examining, and so is an occasional sample of work that seemed routine.
+
+## Lenses turn observations into questions {#sec-lenses}
+
+A *reflection lens* is a point of view that determines which questions to ask about an episode. A workflow lens asks whether the procedure was adequate. A context lens asks whether the needed guidance was available at the right moment. A capability lens asks whether the tools could support the intended action. An authority lens asks whether the task reached a decision that someone else should have made.
+
+The export failure can be examined through all four lenses. Looking through only one risks a premature conclusion, such as adding a new instruction when the right one already exists, or blaming the tool for a flaw in the workflow. Comparing several lenses helps pin down what the episode actually revealed.
+
+Past reflection cases can help with choosing lenses. Such a precedent links an observed pattern to the questions that proved useful, the interpretations reached, the reasons reviewers gave, and what happened afterward. Retrieving a varied set of cases widens the inquiry, and cases that were rejected or later corrected warn against misleading analogies. Lenses can therefore be chosen from the friction and the available precedents, while a person can still ask for a particular focus. When no relevant precedent exists, reflection derives its questions from the episode itself.
+
+## Reflection produces a Knowledge Delta {#sec-knowledge-delta}
+
+The output of reflection is a *Knowledge Delta*: a proposed addition, revision, narrowing, or withdrawal relative to the guidance the agent had during the episode. A delta records the observation, short quotations of the evidence, the interpretation and the alternatives considered, the proposed lesson, its scope, the remaining uncertainty, and the intended change to future behavior.
+
+For the export episode, a delta might state that the tool requires an explicit destination in the observed configuration, and that future uses should check for this before exporting. Its evidence would be the failed attempt, the correction, and the successful retry. Its scope would stay limited to the observed tool and configuration until broader evidence justifies generalizing it.
+
+This intermediate form lets reflection focus on what was learned. Exact event identifiers, file locations, hashes, and edit syntax can be filled in later. A well-scoped finding is still useful even when the trajectory lacks the detail needed to generate a patch automatically.
+
+## Attribution decides where a lesson belongs {#sec-attribution}
+
+Attribution asks where a lesson should take effect in future behavior. Answering this requires both careful handling of evidence and judgment about which mechanism was responsible.
+
+Evidence localization maps each quoted passage to a span in the immutable trajectory. Exact or normalized matching can verify a span, and surrounding context can disambiguate repeated text. Provenance resolution then uses recorded mappings, where they exist, to identify the version of the source that supplied an instruction or observation. These mappings can be stored outside the text the language model sees. When only snapshots of the sources are available, a text match suggests a correspondence but does not prove that the agent saw that source during the run.
+
+Deterministic tools can verify spans, identities, versions, and the preconditions for an edit. Smaller language models can help with ambiguous matches and routine routing under explicit rules, but they must report ambiguity rather than hide it. Dividing the work this way lets interpretation and mechanical lookup each use a suitable method, and keeps a model's confidence from being mistaken for verified provenance.
+
+Behavioral attribution compares possible causes and possible places to make a change. If the export instruction was missing, the procedure may need a new step. If it existed but was not loaded, the path by which guidance reaches the agent's context may need repair. If the failure came from a defect in the tool, an engineering fix may be needed. Finding the error message locates the evidence; choosing among these responses takes interpretation.
+
+The set of available destinations defines the *coverage* of RB: which parts of the operating model experience can change in a lasting way. For bounded tasks, memory and skills may be enough. When procedures, quality criteria, context routing, or reflection instructions cause recurring problems, they may need to be changeable as well. Where a change goes depends on what the attribution supports and on who has authority over the target.
+
+## Improvement proposals make learning actionable {#sec-proposals}
+
+An improvement proposal combines the delta with its evidence, attribution, target, and a concrete revision. It states when the change applies, what effect it should have, and how that effect can be checked. An addition names an owner even when there is no existing passage to point to; a revision refers to the specific version that was inspected. If the right destination is unclear, the proposal records this as an open question.
+
+The proposal also explains how future work will encounter the lesson. We call this part of the design *context routing*. A revised skill may be reached through its usual trigger. A tool prerequisite may be attached to the tool's description. A broader rule may need to be linked from several procedures. When related pieces of guidance need to be read together, incorporation keeps them explicitly connected rather than relying on retrieval to surface them together by chance. This follows the Context Minimization Principle, which is concerned with making sufficient context reachable from natural entry points [@zhang2026cmp].
+
+Some proposals consist only of routing. In the API example from @sec-trajectory, the right change is a single link from the README to the design note, placed where the next agent will start looking. Adding a copy of the conventions elsewhere would create a second version that could drift out of date.
+
+A concrete proposal gives the reviewer something to assess: what happened, the candidate lesson, the proposed change, how widely it should apply, and how to check it. A proposal may also conclude that the observation should stay local, or that more evidence is needed.
+
+## Reflection learns from its own outcomes {#sec-learning-methods}
+
+Once a proposal has been reviewed and put to use, its history becomes another trajectory. A rejected proposal may reveal an inference that went too far. An accepted rule that keeps failing may point to a mistake in attribution. A useful precedent that surfaced only after a person stepped in may reveal a weakness in precedent retrieval.
+
+Reflection can examine these outcomes and propose changes to its own lenses, evidence thresholds, or rules for generalization. For example, if reflection repeatedly confuses a missing instruction with one that existed but was never loaded into context, that pattern can justify an attribution rule that checks both explanations before proposing new guidance. A change to the method goes through the same steps of evidence, proposal, and review, and later cases show whether it actually improves learning.
+
+# Human Review: Governance and Knowledge Synchronization {#sec-review}
+
+## Bringing discoveries back to people {#sec-synchronization}
+
+Delegation changes who sees the details of the work. A person may set the goal and check the deliverable, while the agent is the one that runs into tool failures, hidden prerequisites, and local workarounds. If only the deliverable comes back, the person may never learn what was discovered along the way.
+
+Human review is where this knowledge is synchronized. The agent explains what happened, what it learned, why the lesson matters, and where it may apply. With the decisive evidence and the remaining uncertainty in front of them, reviewers can understand the discovery without replaying the whole trajectory. In the export example, the reviewer learns about the destination prerequisite and can judge whether it is a stable property of the workflow or a temporary condition.
+
+Knowledge also flows back to the agent. The reviewer may know that the tool changed recently, that another team already maintains the relevant instruction, or that an apparent exception is deliberate policy. This information can refine the lesson before it shapes future behavior. Review therefore contributes knowledge as well as a decision.
+
+A polished diff may not be enough for this exchange. A useful review connects the observed event, the proposed explanation, the intended change, and its scope. Whether reviewers actually understand that connection must be measured; an approval click does not show it.
+
+## Making adoption accountable {#sec-adoption}
+
+An accepted proposal can affect many future tasks. Review decides whether the interpretation is supported, the scope is appropriate, and the consequences are acceptable. The reviewer may accept, narrow, defer, or reject the proposal, or approve a limited trial. Automated checks inform this decision where they exist, but domain knowledge and responsibility still matter when deciding what should govern future work.
+
+A *judgment deposit* records the decision together with its rationale, evidence, scope, and the accountable reviewer. This record carries the shared understanding forward. Later participants can find out why a rule exists, tell a local exception from a general commitment, and revisit the rule when its assumptions no longer hold. Rejections and corrections can also serve as useful precedents.
+
+Accepted changes are added to the version-controlled operating model and made reachable from the situations they govern. Later evidence can lead to a new proposal that narrows or reverses an earlier change, and the history of decisions is preserved. Permissions, audit mechanisms, and constitutional constraints set by people cannot be changed through reflection; learning proposals operate inside that boundary of authority.
+
+Human review can still fail through anchoring, overgeneralization, or rubber-stamp approval. It is valuable only when the reviewer receives an understandable account of what happened and has a real chance to challenge it. The goal is both a well-governed change in behavior and a better-informed person.
+
+## From individual tasks to institutional knowledge {#sec-institutional}
+
+Organizations have always struggled to keep what their members learn in practice. Most of it stays with the person who did the work. Some of it reaches colleagues through conversation, and a small part is written into procedures and checklists. Research on organizational learning describes this as encoding inferences from experience into routines that guide later behavior [@levitt1988organizational; @nelson1982evolutionary]. The difficulty lies in making knowledge that is tacit and tied to a particular situation explicit enough to share [@nonaka1994dynamic].
+
+Delegating work to agents changes where this difficulty lies. An agent's trajectory is already a written record, so capturing the experience costs little. The hard part becomes selection and authority: deciding which of many candidate lessons deserve to shape everyone's later work, and who has the right to decide. RB places these decisions in human review and records them as judgment deposits.
+
+The result has two parts that together form institutional knowledge. Accepted changes to the written operating model act as routines: every agent that draws on it follows them, whether or not it took part in the original task. Judgment deposits act as memory: they let people who were not present find out what was learned, why it was adopted, and when it should be reconsidered. The reviewer, who now knows the lesson, carries the same change into the part of the operating model that people hold, and can pass it on to colleagues directly. When a lesson exposes a question that no single reviewer can settle, such as the conflicting guidance described in @sec-trajectory, review should pass it to whoever owns that decision rather than resolve it locally.
+
+# An RB Skill and Its Evaluation {#sec-evaluation}
+
+## A reusable skill {#sec-skill}
+
+RB can be packaged as an agent skill that runs on a completed task, or on one that was interrupted at a meaningful point. Its inputs are the available trajectory, the relevant guidance, and, optionally, past reflection cases. Its output is a review package containing the supported lessons and the proposed changes. The accompanying [Reflective Bootstrapping skill](skills/reflective-bootstrapping/SKILL.md) implements the following workflow:
+
+| Step | Skill instruction | Reviewable output |
+|---|---|---|
+| Observe | Reconstruct the expectation and examine friction or informative successes | A bounded episode with quoted evidence |
+| Reflect | Choose useful lenses, compare explanations, and state what was learned | A scoped Knowledge Delta |
+| Attribute | Verify the available evidence and identify the mechanism to change | An attribution with provenance status and open questions |
+| Propose | Draft a concrete revision, state where it applies, and define a check | An improvement proposal |
+| Synchronize | Explain the discovery and invite human correction and a decision | A shared interpretation and a recorded judgment |
+| Revisit | Examine how adopted changes and past reflections worked out | Evidence for revising task guidance or the method itself |
+
+: Workflow of the accompanying RB skill. {#tbl-skill}
+
+The skill covers the middle of the loop in @tbl-rb-loop. Observe and Reflect carry out the reflection stage, Attribute and Propose produce the improvement proposal, and Synchronize prepares and records human review. Revisit reads the outcomes of incorporation and later practice, which closes the loop. Practice and trajectory capture happen before the skill runs, and incorporation is performed by whatever system stores the agent-facing operating model.
+
+The skill can work from live context while the relevant events are still available, or from a saved trace after the task ends. It explicitly marks gaps caused by context compaction or handoff. With minimal infrastructure it can produce proposals written in prose; with resolver tools and a version-controlled operating model it can produce precise edits. The skill file defines a workflow that an agent can execute, but it does not itself provide a provenance service or a runtime for adopting changes.
+
+## Evaluation protocol {#sec-evaluation-protocol}
+
+Evaluation should test three things: whether the skill extracts well-supported knowledge, whether that knowledge improves later work, and whether it reaches the people involved. These outcomes can diverge. An accepted proposal may rest on weak evidence, a better task score may have another cause, and a correct patch may leave the reviewer no better informed.
+
+A study should collect trajectories from recurring task families and preserve the instructions and source versions the agent had in each episode. Cases should include missing prerequisites, guidance that was not available in context, local exceptions, improvisations that worked, and mistakes made by earlier reflection. Holding out entire task families helps separate genuine transfer from repetition of near-identical cases. Cases with missing provenance or duplicated evidence passages should stay in the dataset rather than be dropped as inconvenient.
+
+The main comparison should include ordinary task execution without structured reflection, a generic retrospective, and the RB skill, all under the same total resource budget. Component studies can then compare fixed lenses with lenses chosen from precedents, and a single combined pass with separate steps for interpretation and evidence resolution. Model versions, prompts, skill revisions, retrieval inputs, token usage, latency, and human effort should all be recorded. When a proposal is adopted, later cases must record whether the updated guidance was actually available and used.
+
+| Outcome | Data and measurement |
+|---|---|
+| Supported learning | Independent ratings of evidence support, novelty relative to existing guidance, and scope; report the share of proposals that are supported alongside the total number of proposals |
+| Attribution quality | Errors in linking evidence, unresolved cases, and agreement with independently established labels for cause and ownership |
+| Future behavior | Recurrence of the original problem, transfer to held-out cases, regressions, and whether adopted guidance is retrieved when needed |
+| Human knowledge synchronization | Reviewers' understanding of the discovered constraint, where it applies, and how certain it is, measured before and after review; transfer questions scored separately from approval decisions |
+| Governance and cost | Scope changes made during review, later reversals, whether the rationale can be recovered, reviewer time, total tokens, and latency |
+| Learning-method improvement | Quality of later proposals after a reviewed revision of the skill, compared with the unrevised skill on held-out cases |
+
+: Planned evaluation data for the RB skill. {#tbl-evaluation}
+
+To study knowledge synchronization, a focused comparison can hold the proposed edit and the review time constant while varying what reviewers see: either the diff alone, or an explanation that links what happened, the lesson, and its scope. Matched question sets given before and after review can test comprehension and transfer; approval rate by itself does not measure comprehension. Reviewer assignment and independent scoring should be specified before any results are collected.
+
+## Results and limitations {#sec-results}
+
+**Empirical results: pending.** This version provides the skill and the evaluation protocol. We have not yet built the trajectory dataset, run the participant study, or carried out the controlled comparison. Sample sizes, effect sizes, uncertainty estimates, and cost comparisons will be reported once data have been collected. The export episode above is an illustration, not an evaluation result.
+
+The mechanism remains vulnerable to incomplete traces, confounding, misleading precedents, and variation between language models. Human review can add insight, but it can also amplify bias. When the knowledge involved is small or rarely reused, maintaining broader guidance can cost more than it saves. The evaluation must therefore account for the full loop, including review and maintenance, and allow for the possibility that compact memory or a small skill library is the better choice.
+
+# Related Work {#sec-related}
+
+## Learning from practice in people and organizations {#sec-related-human}
+
+RB borrows its central idea from the study of human practice. Schön distinguishes reflection-in-action, which happens while the work is under way, from reflection-on-action, which happens afterward [@schon1983reflective]. RB is mainly a form of reflection-on-action for agents. Kolb's experiential learning cycle moves from concrete experience through reflection and generalization to new action [@kolb1984experiential], a sequence that the RB loop follows closely. Argyris's double-loop learning, which questions the assumptions behind actions and not only the actions themselves, motivates RB's attention to its own learning method [@argyris1977double].
+
+Research on organizational learning asks how lessons outlive the people who learned them. Organizations encode experience into routines [@levitt1988organizational; @nelson1982evolutionary], and knowledge creation depends on converting tacit knowledge into explicit forms that others can use [@nonaka1994dynamic]. RB's Knowledge Delta is one such conversion, and its incorporation step adds the result to the routines that guide later work.
+
+Several professional practices already turn experience into changed procedures. Military after-action reviews ask what was supposed to happen, what actually happened, and why [@morrison1999aar]. Blameless postmortems in software operations turn incidents into tracked follow-up actions [@beyer2016sre]. Architecture decision records preserve the context and consequences of design choices [@nygard2011adr], much as judgment deposits do. RB applies these practices to work that agents perform. The agent drafts the account from its own trajectory, and people still make the decisions.
+
+## Reflection and learning from trajectories {#sec-related-reflection}
+
+Self-Refine uses feedback to revise an output within a single episode [@madaan2023selfrefine], while Reflexion carries verbal feedback across trials [@shinn2023reflexion]. ExpeL distills experience into transferable knowledge [@zhao2024expel], Voyager builds a library of executable skills [@wang2023voyager], and Agent Workflow Memory induces reusable workflows [@wang2024awm]. Generative Agents and MemGPT decide which memories to keep under limited context [@park2023generative; @packer2023memgpt]. These systems are important precedents for retaining experience and putting it to use in later work.
+
+MetaReflection derives task instructions from earlier reflections [@gupta2024metareflection]. Agent-Pro reflects at the level of policy [@zhang2024agentpro], and PRAct updates the principles that guide actions [@liu2024pract]. Automatic Prompt Engineer and DSPy optimize instructions automatically [@zhou2023ape; @khattab2024dspy]. RB differs in its emphasis on the path from a discovery made in a specific situation to a scoped proposal, human understanding, and governed adoption. It also applies the same process to parts of its own learning method.
+
+## Retrieval and inherited guidance {#sec-related-rag}
+
+RAG pairs generation with a corpus that can be updated independently [@lewis2020rag]. Self-RAG, Corrective RAG, and Adaptive-RAG make retrieval conditional or corrective [@asai2023selfrag; @yan2024crag; @jeong2024adaptiverag]. RAPTOR, GraphRAG, and HippoRAG organize knowledge into hierarchies or graphs [@sarthi2024raptor; @edge2024graphrag; @gutierrez2024hipporag]. Such methods can help find precedents and later retrieve accepted guidance.
+
+RB adds a question about the status of what is retrieved: which reviewed commitments apply to this situation, within what scope, and what other guidance must be read alongside them? Incorporation records these relationships, not just the content. When relevant guidance later fails to reach the agent, that failure can itself become a case for reflection.
+
+## Recursive improvement and human judgment {#sec-related-governance}
+
+Automated Design of Agentic Systems searches over agent designs [@hu2024adas], STOP improves the program that does the improving [@zelikman2023stop], and the Darwin Gödel Machine edits an agent's own codebase [@zhang2025dgm]. Work on Gödel machines studies self-referential improvement subject to proof obligations [@schmidhuber2007godel]. RB instead focuses on guidance that people can inspect, improved through empirical feedback within a protected boundary of authority.
+
+Training from human feedback and Constitutional AI shape model behavior through preferences or explicit principles [@ouyang2022instructgpt; @bai2022constitutional]. Human review in RB is about lessons learned in specific situations at run time: a person learns what the agent discovered, contributes an interpretation, and decides whether the resulting proposal should govern future episodes. The judgment deposit records that exchange so it can be used and revised later.
+
+# Conclusion {#sec-conclusion}
+
+People have always learned from practice, and this does not stop when agents do the work. An agent's trajectories record what it found out about tools, environments, procedures, and what people expect. Reflective Bootstrapping turns those findings into lasting improvements through reflection, attribution, improvement proposals, and human review.
+
+Review brings the knowledge back to people while controlling what gets adopted. Accepted changes and the decisions behind them turn a lesson from one task into shared knowledge that outlasts it. Later work tests the resulting guidance, and its outcomes can improve the reflection method itself. The accompanying skill and evaluation protocol make this loop concrete. The next step is to measure whether it produces well-supported lessons, better subsequent work, and shared human understanding at a sustainable cost.
+
+# References {.unnumbered}

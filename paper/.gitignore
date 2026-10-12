@@ -1,0 +1,24 @@
+# Quarto / Pandoc build artifacts
+/.quarto/
+*_files/
+*.html
+*.pdf
+*.tex
+!_extensions/**/*.tex
+
+# Copied beside the .tex on render (live under _extensions/)
+/arxiv.sty
+/orcidlink.sty
+
+# Intermediate LaTeX
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+**/*.quarto_ipynb

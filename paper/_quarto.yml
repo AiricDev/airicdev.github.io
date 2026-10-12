@@ -1,0 +1,15 @@
+project:
+  type: default
+  render:
+    - reflective-bootstrapping.qmd
+
+format:
+  pdf:
+    keep-tex: true
+  html:
+    toc: true
+    toc-depth: 3
+
+execute:
+  echo: false
+  warning: false
