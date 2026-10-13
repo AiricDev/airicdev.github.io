@@ -9,9 +9,9 @@ import PrimaryButton from './PrimaryButton.astro';
         <span class="h-1.5 w-1.5 rounded-full bg-foreground"></span>
         <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Coming soon · Open source</span>
       </div>
-      <h1 class="text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">A trainable<br />agent.</h1>
-      <p class="mt-6 max-w-xl text-xl font-medium text-foreground sm:text-2xl">Turn any methodology into a working agent.</p>
-      <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">Airic turns your methods into an agent operating model, then improves that model through real work, reflection, and review.</p>
+      <h1 class="text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">An agent that<br />learns from<br />practice.</h1>
+      <p class="mt-6 max-w-xl text-xl font-medium text-foreground sm:text-2xl">A methodology runtime that improves through real work.</p>
+      <p class="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">Your methods guide the work. Practice reveals new knowledge. You review what Airic discovers, learn from it, and decide which lessons should guide the next task.</p>
       <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
         <PrimaryButton href="#waitlist">Join the waitlist</PrimaryButton>
         <a href="#how-it-learns" class="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground">See how Airic learns <span class="transition-transform group-hover:translate-y-0.5">↓</span></a>
@@ -26,8 +26,8 @@ import PrimaryButton from './PrimaryButton.astro';
       <div class="mx-auto flex w-fit items-center gap-3 rounded-md border border-foreground bg-foreground px-5 py-2.5 text-background"><span class="h-2 w-2 rounded-sm bg-background"></span><span class="font-mono text-sm font-semibold tracking-wide">AIRIC</span></div>
       <div class="my-3 text-center font-mono text-muted-foreground">↓</div>
       <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">{['Procedures', 'Standards', 'Checklists', 'Decision boundaries'].map((label) => <div class="rounded-md border border-border bg-background px-2.5 py-2"><p class="font-mono text-[10px] leading-tight text-foreground">{label}</p></div>)}</div>
-      <div class="mb-3 mt-8 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-foreground"></span><span class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">02 · Train through experience</span></div>
-      <div class="space-y-2">{['Real work', 'Reflection', 'Reviewed update', 'Better next task'].map((label, index) => <div class="flex items-center gap-3"><span class="font-mono text-[10px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span><div class="flex-1 rounded-md border border-border bg-background px-3 py-2"><p class="font-mono text-xs text-foreground">{label}</p></div>{index < 3 && <span class="font-mono text-xs text-muted-foreground">↓</span>}</div>)}</div>
+      <div class="mb-3 mt-8 flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-foreground"></span><span class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">02 · Learn through practice</span></div>
+      <div class="space-y-2">{['Real work', 'Discover new knowledge', 'Share and review', 'Improved method'].map((label, index) => <div class="flex items-center gap-3"><span class="font-mono text-[10px] text-muted-foreground">{String(index + 1).padStart(2, '0')}</span><div class="flex-1 rounded-md border border-border bg-background px-3 py-2"><p class="font-mono text-xs text-foreground">{label}</p></div>{index < 3 && <span class="font-mono text-xs text-muted-foreground">↓</span>}</div>)}</div>
     </div>
   </div>
 </section>

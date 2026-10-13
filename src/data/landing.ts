@@ -112,9 +112,9 @@ export const heroSessionSteps = [
 ] as const;
 
 export const siteMeta = {
-  title: 'Airic — A trainable agent',
+  title: 'Airic — An agent that learns from practice',
   description:
-    'Airic turns your methods into an agent operating model, then improves that model through real work, reflection, and review.',
-  ogDescription: 'Turn any methodology into a working, trainable agent.',
+    'Airic is a methodology runtime that puts your methods to work, discovers knowledge through practice, and turns reviewed lessons into better methods for you and your team.',
+  ogDescription: 'Put your methods to work. Learn from practice. Improve together.',
   githubUrl: 'https://github.com/airicdev',
 } as const;

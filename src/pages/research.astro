@@ -3,1272 +3,139 @@ import MarketingLayout from '@/layouts/MarketingLayout.astro';
 import Nav from '@/components/landing/Nav.astro';
 import Footer from '@/components/landing/Footer.astro';
 
-const title = 'The Executable Institution Model — Airic Research';
-const description =
-  'A theory of how organizations express operating models, delegate work to agents, and solidify learned behavior into durable digital capability.';
-
-const expressionLayers = [
-  {
-    number: '01',
-    symbol: 'Cₜ',
-    title: 'Complete Value-Creation Capability',
-    body: 'People, relationships, capital, physical capabilities, market position, and digital assets including business data, traces, software systems, and business specifications.',
-    boundary: 'Scope boundary · Cₜ → O',
-    note: 'People and assets do not enter the Operating Model. How they are recognized, called, configured, coordinated, and governed does.',
-  },
-  {
-    number: '02',
-    symbol: 'O',
-    title: 'Operating Model',
-    body: 'The structure that turns capability into coordinated, repeatable outcomes: goals, roles, authority, process, standards, incentives, information flows, precedents, escalation, and feedback.',
-    boundary: 'Materialization boundary · O → O*',
-    note: 'Some operating capability remains attached to people: private trust, physical skill, tacit intuition, taste, and situated perception.',
-  },
-  {
-    number: '03',
-    symbol: 'O*',
-    title: 'Materializable Operating Model',
-    body: 'The purposes within O that can be separated from particular individuals and preserved, inherited, and reused without losing what they are meant to accomplish.',
-    boundary: 'Representation boundary · O* → Rₜ',
-    note: 'O* specifies stable organizational purposes. It does not prescribe a document form, a rule shape, or whether the executor is human or agent.',
-  },
-  {
-    number: '04',
-    symbol: 'Rₜ',
-    title: 'Represented Operating Model',
-    body: 'The part Airic currently expresses through roles, tasks, processes, standards, precedents, authority boundaries, decision requests, sessions, and links to systems.',
-    boundary: 'Implementation layer',
-    note: 'Representation should preserve purpose, not copy every human-facing rule. Rₜ is allowed to grow, change form, and shrink.',
-  },
-] as const;
-
-const delegationInputs = [
-  {
-    symbol: 'Rₜ',
-    title: 'Represented model',
-    body: 'The institution-specific purposes, constraints, authority, and precedents available to the agent.',
-  },
-  {
-    symbol: 'Pₜ',
-    title: 'Model priors',
-    body: 'General capability the model already possesses without organization-specific instructions.',
-  },
-  {
-    symbol: 'Vₜ',
-    title: 'Verification environment',
-    body: 'The tests, schemas, evaluators, feedback, and other means by which errors can be found cheaply.',
-  },
-  {
-    symbol: 'Hₜ',
-    title: 'Human-in-the-loop capacity',
-    body: 'The speed and quality with which people answer decision requests, review changes, and absorb exceptions.',
-  },
-] as const;
-
-const reflectionOperations = [
-  {
-    number: '01',
-    title: 'Add or correct',
-    trigger: 'A failure, exception, or human correction during work.',
-    action: 'Add a missing purpose or repair an inaccurate representation.',
-  },
-  {
-    number: '02',
-    title: 'Retire',
-    trigger: 'A model prior or new mechanism makes a rule redundant.',
-    action: 'Remove the carrier only after every function it served has another explicit home.',
-  },
-  {
-    number: '03',
-    title: 'Recheck premises',
-    trigger: 'Periodic review rather than a visible failure.',
-    action: 'Find cold drift: rules whose assumptions expired while outputs still looked plausible.',
-  },
-  {
-    number: '04',
-    title: 'Solidify outward',
-    trigger: 'A responsibility has become sufficiently deterministic.',
-    action: 'Move its purpose into software, then remove the rule that carried it from Rₜ.',
-  },
-] as const;
-
-const executionBoundaries = [
-  {
-    title: 'Capability',
-    symbol: 'Pₜ',
-    movement: 'Model + harness',
-    body: 'Understanding, context assembly, retrieval, tools, and environmental feedback improve with models and harnesses.',
-  },
-  {
-    title: 'Verification',
-    symbol: 'Vₜ',
-    movement: 'Data + environment',
-    body: 'Delegation expands when mistakes become cheap to detect. Ground truth, tests, schemas, and feedback are largely an organizational engineering problem.',
-  },
-  {
-    title: 'Response',
-    symbol: 'Hₜ',
-    movement: 'Attention + discipline',
-    body: 'A decision request that no one answers breaks the responsibility. Response speed and judgment quality are runtime dependencies.',
-  },
-] as const;
-
-const companyAssets = [
-  {
-    title: 'Business data',
-    relation: 'Called and governed by Rₜ; the main source of ground truth for Vₜ.',
-  },
-  {
-    title: 'Trace',
-    relation: 'Produced by execution and returned to reflection—the only self-referential asset.',
-  },
-  {
-    title: 'Software systems',
-    relation: 'Receive responsibilities that become deterministic enough to solidify out of Rₜ.',
-  },
-  {
-    title: 'Business specifications',
-    relation: 'State how the business must behave for human readers and software development.',
-  },
-] as const;
-
-const costShifts = [
-  {
-    number: '01',
-    title: 'Observation cost approaches zero',
-    shift: 'Sampling → every execution',
-    implication:
-      'Standards can become continuously enforced constraints. Reflection can happen while trace evidence is still precise, and every rule can be periodically rechecked for cold drift.',
-    failure:
-      'Over-rigidity. Human organizations use ambiguity to absorb legitimate exceptions. Explicit exception channels and paths from exception to precedent must be designed at the same time.',
-  },
-  {
-    number: '02',
-    title: 'Replication cost approaches zero',
-    shift: 'Hierarchy → lossless distribution',
-    implication:
-      'One task and a thousand parallel tasks can run the same represented model without the behavioral decay that normally creates management layers.',
-    failure:
-      'Monoculture. A flawed rule is also copied perfectly. Progressive rollout, independent checks, and deliberate diversity must replace the accidental hedge of inconsistent human execution.',
-  },
-  {
-    number: '03',
-    title: 'Change cost approaches zero',
-    shift: 'Reorganization → versioned experiment',
-    implication:
-      'Operating models can branch, run by scope, be compared against trace evidence, and roll back. Organization design becomes an experimental discipline.',
-    failure:
-      'Change outruns validation. A change budget and cooling period are required so that rules remain stable enough for people and agents to rely on them.',
-  },
-  {
-    number: '04',
-    title: 'Transfer cost approaches zero',
-    shift: 'Years of apprenticeship → distributable artifact',
-    implication:
-      'Reusable operating capability can be inherited, forked, subscribed to, or purchased instead of rebuilt from scratch by every organization.',
-    failure:
-      'Anything transferable becomes available to competitors. Differentiation moves back toward real relationships, exclusive data, capital, market position, and judgment deposited from proprietary work.',
-  },
-] as const;
-
-const paths = [
-  {
-    number: '01',
-    title: 'Reflective Bootstrapping',
-    formula: 'Rₜ → O*',
-    operator: 'Approximation',
-    trigger: 'Work events',
-    body: 'Expand coverage of organizational purposes through trace, attribution, governed behavior patches, and human judgment deposits. The target is not document volume.',
-  },
-  {
-    number: '02',
-    title: 'Model + Harness Progress',
-    formula: 'Eₜ → Rₜ',
-    operator: 'Approximation',
-    trigger: 'Models, environment, discipline',
-    body: 'Reliably perform more of the responsibilities assigned to agents through stronger priors, context assembly, verification, tools, and human response. The arrow is shorthand, not set containment.',
-  },
-  {
-    number: '03',
-    title: 'Operating Model Redesign',
-    formula: 'expand O',
-    operator: 'Reconstruction',
-    trigger: 'Intentional review',
-    body: 'Question the shape and premises of the Operating Model itself. Evidence comes from global patterns, changing cost curves, and possibilities that no single failure trace can reveal.',
-  },
-  {
-    number: '04',
-    title: 'Solidification',
-    formula: 'deterministic(Rₜ) → software ∈ Cₜ',
-    operator: 'Migration',
-    trigger: 'Human timing decision',
-    body: 'Move stable responsibilities from probabilistic agent execution into deterministic software. Flexibility falls, while reliability and available Rₜ capacity rise.',
-  },
-] as const;
-
-const differentiatingAssets = [
-  {
-    asset: 'Capital',
-    accumulates: 'Slowly',
-    purchasable: 'Yes',
-    modelEffect: 'No depreciation',
-  },
-  {
-    asset: 'Relationships + brand',
-    accumulates: 'Yes',
-    purchasable: 'Difficult',
-    modelEffect: 'No depreciation',
-  },
-  {
-    asset: 'Data + trace',
-    accumulates: 'Continuously',
-    purchasable: 'Usually no',
-    modelEffect: 'Often appreciates',
-  },
-  {
-    asset: 'Operating Model',
-    accumulates: 'Yes',
-    purchasable: 'Yes',
-    modelEffect: 'Partly depreciates as Pₜ grows',
-  },
-] as const;
-
-const attentionUses = [
-  {
-    title: 'Execute',
-    body: 'Perform the work directly.',
-    direction: 'Marginal value falls as Dₜ + Eₜ expands.',
-  },
-  {
-    title: 'Restate',
-    body: 'Rebuild context, repeat agreements, and correct the same class of deviation.',
-    direction: 'Marginal value should approach zero.',
-  },
-  {
-    title: 'Deposit',
-    body: 'Turn judgment, exception handling, and purpose into governed institutional assets.',
-    direction: 'Value compounds across every future execution.',
-  },
-] as const;
+const title = 'Reflective Bootstrapping — Airic Research';
+const description = 'How agents turn practice into institutional knowledge: reflection lenses, evidence-grounded proposals, and human review that governs learning and brings discoveries back to people.';
+const stages = [
+  { name: 'Practice', body: 'Act in the real world with existing knowledge.' },
+  { name: 'Trajectory', body: 'Keep the actions, observations, and corrections.' },
+  { name: 'Reflection', body: 'Interpret what the experience revealed.' },
+  { name: 'Proposal', body: 'Identify a scoped change and its evidence.' },
+  { name: 'Human review', body: 'Share the learning and decide what to adopt.' },
+  { name: 'Incorporation', body: 'Make accepted knowledge available next time.' },
+];
+const mechanisms = [
+  { title: 'Find friction', body: 'Retries, workarounds, repeated searches, and human corrections reveal gaps between expectations and reality. Informative successes can also teach.' },
+  { title: 'Choose reflection lenses', body: 'Ask whether the episode reveals a workflow defect, missing context, a capability limit, or an authority conflict. Diverse precedents help expand the questions.' },
+  { title: 'Form a Knowledge Delta', body: 'State what was learned, with quoted evidence, alternative explanations, scope, and uncertainty. Keep the conditions attached to the lesson.' },
+  { title: 'Attribute the lesson', body: 'Identify which part of the operating model should change. A missing instruction, an instruction that was never loaded, and a tool defect need different responses.' },
+  { title: 'Prepare an improvement proposal', body: 'Show the concrete revision, its intended effect, how future work will encounter it, and what would confirm or challenge it.' },
+  { title: 'Improve reflection itself', body: 'Rejected proposals and later outcomes expose weak lenses or attribution habits. Changes to the learning method go through the same review process.' },
+];
 ---
 
-<MarketingLayout
-  title={title}
-  description={description}
-  ogImagePath="/research-og-v2.webp"
-  ogType="article"
->
+<MarketingLayout title={title} description={description} ogImagePath="/research-og-rb.png" ogType="article">
   <Nav />
   <main>
     <article>
-      <header class="relative overflow-hidden border-b border-border">
-        <div
-          aria-hidden="true"
-          class="pointer-events-none absolute inset-0 opacity-30"
-          style={{
-            backgroundImage: 'radial-gradient(var(--color-border-strong) 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-            maskImage: 'linear-gradient(to bottom, black, transparent 82%)',
-          }}
-        >
-        </div>
-        <div class="relative mx-auto max-w-6xl px-6 pb-20 pt-16 sm:pb-24 sm:pt-24">
-          <div class="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-            <span class="rounded-full border border-border-strong bg-background px-3 py-1.5 text-foreground">
-              Research Note 01
-            </span>
-            <span>Airic · July 2026</span>
+      <header class="border-b border-border">
+        <div class="mx-auto max-w-6xl px-6 py-16 sm:py-24">
+          <div class="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            <span class="rounded-full border border-border-strong px-3 py-1.5">Airic Research</span>
+            <span>October 2026 · Design proposal</span>
           </div>
-
-          <div class="mt-10 grid gap-10 lg:grid-cols-[1.45fr_0.55fr] lg:items-end">
+          <div class="mt-10 grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
             <div>
-              <p class="font-mono text-sm text-accent">Inheritance · delegation · invention</p>
-              <h1 class="mt-4 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-                The Executable
-                <br />
-                Institution Model
-              </h1>
-              <p class="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-                A theory of how organizations preserve operating capability, delegate work to
-                agents, and turn learned behavior into durable digital capability under a new cost
-                structure.
-              </p>
+              <p class="font-mono text-sm text-muted-foreground">Practice → knowledge → institution</p>
+              <h1 class="mt-4 text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">Reflective<br />Bootstrapping</h1>
+              <p class="mt-6 max-w-2xl text-xl leading-relaxed text-muted-foreground">How agents turn practice into institutional knowledge.</p>
+              <div class="mt-8 flex flex-wrap gap-3">
+                <a class="button-primary" href="#reflective-bootstrapping">Explore the learning loop <span aria-hidden="true">↓</span></a>
+                <a class="button-secondary" href="#rb-skill">Get the RB skill <span aria-hidden="true">↓</span></a>
+              </div>
             </div>
-
-            <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border font-mono text-xs lg:grid-cols-1">
-              <div class="bg-card p-4">
-                <dt class="text-muted-foreground">Inheritance</dt>
-                <dd class="mt-1 text-foreground">What can be preserved?</dd>
-              </div>
-              <div class="bg-card p-4">
-                <dt class="text-muted-foreground">Delegation</dt>
-                <dd class="mt-1 text-foreground">What can be entrusted?</dd>
-              </div>
-              <div class="col-span-2 bg-card p-4 lg:col-span-1">
-                <dt class="text-muted-foreground">Invention</dt>
-                <dd class="mt-1 text-foreground">What becomes possible now?</dd>
-              </div>
-            </dl>
+            <div class="rounded-xl border border-border bg-card p-6">
+              <p class="eyebrow">The research question</p>
+              <p class="mt-4 text-xl leading-snug">What can an organization inherit from the work its agents already do?</p>
+              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">A finished task is a deliverable. Its trajectory can also be the beginning of a better way to work.</p>
+            </div>
           </div>
         </div>
       </header>
 
-      <section class="border-b border-border">
-        <div class="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[0.55fr_1.45fr] lg:py-24">
+      <section class="research-section" aria-labelledby="practice-heading">
+        <div class="section-grid">
+          <p class="eyebrow">01 · The intuition</p>
           <div>
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              00 · Problem statement
-            </p>
-          </div>
-          <div class="max-w-3xl">
-            <p class="text-2xl font-medium leading-snug tracking-tight text-foreground sm:text-3xl">
-              “How much organizational work can AI replace?” collapses several different problems
-              into one slogan.
-            </p>
-            <p class="mt-7 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              It mixes the limits of organizational design, knowledge materialization,
-              representation, model capability, verification, human attention, and accountability.
-              Those boundaries move for different reasons and belong to different owners. A useful
-              theory must separate them before it can guide product or organizational decisions.
-            </p>
-
-            <div class="mt-10 grid gap-4 sm:grid-cols-2">
-              <div class="rounded-lg border border-border bg-card p-5">
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                  The inheritance view
-                </p>
-                <p class="mt-3 text-sm leading-relaxed text-foreground/80">
-                  How much of an existing organization can be preserved as an institutional asset,
-                  and how much of that asset can agents reliably carry? This is the migration path.
-                </p>
-              </div>
-              <div class="rounded-lg border border-border bg-card p-5">
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                  The invention view
-                </p>
-                <p class="mt-3 text-sm leading-relaxed text-foreground/80">
-                  Which operating models never existed because they were uneconomical under human
-                  costs, but become viable under agent economics? This is the source of advantage.
-                </p>
-              </div>
+            <h2 id="practice-heading">Practice produces knowledge.</h2>
+            <p class="intro">We learn by doing. That familiar relationship continues when agents do the work.</p>
+            <p>Instructions describe the world as their authors understood it. Contact with reality exposes hidden prerequisites, missing steps, local exceptions, and unstated expectations. Resolving those surprises produces new knowledge.</p>
+            <p>The final deliverable rarely preserves what was discovered along the way. That knowledge remains in the trajectory, often unused by later tasks and unseen by the person who delegated the work.</p>
+            <div class="mt-8 border-l-2 border-accent pl-6">
+              <p class="text-xl font-medium leading-relaxed text-foreground">RB turns what an agent learns during work into improvements that people can understand, review, and keep.</p>
             </div>
-
-            <p class="mt-8 text-base leading-relaxed text-muted-foreground">
-              Inheritance asks what survives translation. Invention asks what changed economics
-              makes newly viable. Calling the second “more automation” would preserve the very
-              assumptions—hierarchy, sampled review, rare change, person-bound capability—that now
-              deserve redesign.
-            </p>
           </div>
         </div>
       </section>
 
-      <section id="core-model" class="border-b border-border bg-secondary/35">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              01 · The core model
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Expression is a chain. Execution is a function.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              The expression chain asks whether operating capability can be separated from people
-              and represented. Rₜ is then the principal institution-specific input to execution,
-              alongside model priors, verification, and human response. Eₜ is their combined
-              runtime result—not a fifth layer and not a subset of Rₜ.
-            </p>
-          </div>
-
-          <figure class="mt-12 overflow-hidden rounded-xl border border-border bg-card p-5 sm:p-8">
-            <div class="grid gap-4 lg:grid-cols-[1fr_10rem_1fr] lg:items-stretch">
-              <div class="rounded-lg border border-foreground bg-foreground p-6 text-background sm:p-8">
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-background/50">
-                  Expression chain
-                </p>
-                <div
-                  role="math"
-                  aria-label="R sub t is a subset of O star, which is a proper subset of O, which is a proper subset of C sub t."
-                  class="mt-6 overflow-x-auto overflow-y-hidden"
-                >
-                  <code class="whitespace-nowrap font-mono text-xl font-semibold tracking-tight sm:text-3xl">
-                    Rₜ ⊆ O* ⊊ O ⊊ Cₜ
-                  </code>
-                </div>
-                <p class="mt-6 text-sm leading-relaxed text-background/65">
-                  The outer two gaps are definitional. The inner gap is an implementation gap that
-                  can narrow, widen, and change form.
-                </p>
-              </div>
-
-              <div class="flex flex-col items-center justify-center gap-3 py-2 lg:px-3">
-                <span class="text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                  Rₜ is the primary input
-                </span>
-                <span aria-hidden="true" class="font-mono text-2xl text-accent lg:hidden">↓</span>
-                <span aria-hidden="true" class="hidden font-mono text-2xl text-accent lg:block">→</span>
-                <span class="rounded-full border border-border-strong bg-background px-3 py-1.5 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                  no containment relation
-                </span>
-              </div>
-
-              <div class="rounded-lg border border-border-strong bg-background p-6 sm:p-8">
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  Delegation function
-                </p>
-                <div
-                  role="math"
-                  aria-label="E sub t equals a function of R sub t, P sub t, V sub t, and H sub t."
-                  class="mt-6 overflow-x-auto overflow-y-hidden"
-                >
-                  <code class="whitespace-nowrap font-mono text-xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                    Eₜ = f(Rₜ, Pₜ, Vₜ, Hₜ)
-                  </code>
-                </div>
-                <div class="mt-6 grid grid-cols-2 gap-2 font-mono text-xs">
-                  <span class="rounded border border-border bg-card px-3 py-2">Rₜ · institution</span>
-                  <span class="rounded border border-border bg-card px-3 py-2">Pₜ · prior</span>
-                  <span class="rounded border border-border bg-card px-3 py-2">Vₜ · verification</span>
-                  <span class="rounded border border-border bg-card px-3 py-2">Hₜ · response</span>
-                </div>
-              </div>
-            </div>
-
-            <figcaption class="mt-6 border-t border-border pt-5 font-mono text-[11px] leading-relaxed text-muted-foreground">
-              The chain asks what can be inherited. The function asks which assigned
-              responsibilities can be reliably carried under the current model, verification
-              environment, and human support system.
-            </figcaption>
+      <section id="reflective-bootstrapping" class="research-section bg-secondary/35" aria-labelledby="loop-heading">
+        <div class="mx-auto max-w-6xl px-6">
+          <p class="eyebrow">02 · The mechanism</p>
+          <h2 id="loop-heading" class="mt-4 max-w-3xl">A learning loop grounded in real work.</h2>
+          <p id="core-model" class="intro max-w-3xl">Reflective Bootstrapping is a governed process in which agents turn experience from practice into lasting improvements to their behavior, including improvements to how they learn.</p>
+          <figure class="mt-10" aria-labelledby="loop-caption">
+            <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {stages.map((stage, i) => (
+                <li class="rounded-xl border border-border bg-card p-6">
+                  <div class="flex items-center justify-between font-mono text-xs text-muted-foreground"><span>{String(i + 1).padStart(2, '0')}</span><span aria-hidden="true">{i === stages.length - 1 ? '↺' : '→'}</span></div>
+                  <h3 class="mt-5 text-lg font-semibold">{stage.name}</h3>
+                  <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{stage.body}</p>
+                </li>
+              ))}
+            </ol>
+            <figcaption id="loop-caption" class="mt-5 text-sm leading-relaxed text-muted-foreground">Accepted changes guide the next round of practice. Review decisions, including rejections and corrections, become precedents for later reflection.</figcaption>
           </figure>
-        </div>
-      </section>
-
-      <section class="border-b border-border">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              02 · Inheritance
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Preserve the purpose, not the human rule form.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              O* names the purposes that can be detached from particular people and inherited by an
-              institution. Rₜ is a new implementation for an agent executor. It should not copy
-              every reminder, approval layer, or redundancy created to compensate for human
-              limitations.
-            </p>
-          </div>
-
-          <div class="mt-12 divide-y divide-border border-y border-border">
-            {
-              expressionLayers.map((layer) => (
-                <section class="grid gap-5 py-9 sm:grid-cols-[4rem_1fr] lg:grid-cols-[4rem_0.85fr_1.15fr] lg:gap-10 lg:py-12">
-                  <div class="font-mono text-xs text-muted-foreground">
-                    <span>{layer.number}</span>
-                    <span class="ml-2 text-accent">{layer.symbol}</span>
-                  </div>
-                  <div>
-                    <h3 class="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                      {layer.title}
-                    </h3>
-                    <p class="mt-4 text-base leading-relaxed text-muted-foreground">{layer.body}</p>
-                  </div>
-                  <div class="sm:col-start-2 lg:col-start-auto">
-                    <div class="rounded-lg border border-border bg-secondary/35 p-5">
-                      <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                        {layer.boundary}
-                      </p>
-                      <p class="mt-3 text-sm leading-relaxed text-foreground/80">{layer.note}</p>
-                    </div>
-                  </div>
-                </section>
-              ))
-            }
-          </div>
-
-          <div class="mt-14 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Two causes of a smaller Rₜ
-              </p>
-              <div class="mt-6 grid gap-5 sm:grid-cols-2">
-                <div>
-                  <h3 class="font-semibold text-foreground">Representation loss</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    Airic intends to represent a purpose but cannot carry it accurately through
-                    current documents, metadata, links, dynamic state, or conflict resolution.
-                    This is a real loss.
-                  </p>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-foreground">Deliberate non-representation</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    A human-facing rule is omitted because every function it served is covered by a
-                    model prior, another rule, or a stronger mechanism. This can be lossless.
-                  </p>
-                </div>
-              </div>
-              <blockquote class="mt-7 border-l-2 border-accent pl-5 text-lg font-medium leading-relaxed text-foreground">
-                The invariant is purpose coverage—not rule preservation.
-              </blockquote>
-            </div>
-
-            <div class="rounded-xl border border-foreground bg-foreground p-6 text-background sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-background/50">
-                The hidden-function test
-              </p>
-              <p class="mt-5 text-base leading-relaxed text-background/75">
-                Before retiring a rule, list every function it performs and name the new home for
-                each one. Sampling, for example, controls quality but also absorbs legitimate
-                exceptions. Replacing it with full automated checks while forgetting the exception
-                channel preserves the declared function and loses the hidden one.
-              </p>
-            </div>
+          <div class="mt-10 grid gap-6 border-t border-border pt-8 md:grid-cols-2">
+            <div><h3 class="text-lg font-semibold">What changes?</h3><p class="mt-3 text-sm leading-relaxed text-muted-foreground">The agent-facing operating model: instructions, procedures, quality criteria, skills, precedents, and paths to relevant guidance. The person reviewing a lesson also carries new knowledge back into the organization.</p></div>
+            <div><h3 class="text-lg font-semibold">What persists?</h3><p class="mt-3 text-sm leading-relaxed text-muted-foreground">Reviewed guidance and the reasons for adopting it. Later agents and colleagues can inherit a lesson without having taken part in the original task.</p></div>
           </div>
         </div>
       </section>
 
-      <section class="border-b border-border bg-secondary/35">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-            <div>
-              <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                03 · Company assets
-              </p>
-              <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                The Operating Model is not the company’s digital capability.
-              </h2>
-            </div>
-            <div class="max-w-3xl">
-              <p class="text-lg leading-relaxed text-muted-foreground">
-                The expression chain follows one class of organizational asset: the structure that
-                coordinates work. Business data, traces, software systems, and business
-                specifications also belong to Cₜ. They are not inside O. The Operating Model calls,
-                configures, and governs them.
-              </p>
-              <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-                The relation also runs outward. When an agent-carried responsibility becomes
-                sufficiently deterministic, its purpose should move into software and its rule
-                should leave Rₜ. The Operating Model is therefore an intermediate state in
-                capability maturation, not the final destination of every digital behavior.
-              </p>
-            </div>
+      <section id="reflection" class="research-section bg-secondary/35" aria-labelledby="reflection-heading">
+        <div class="mx-auto max-w-6xl px-6">
+          <p class="eyebrow">03 · Reflection</p>
+          <h2 id="reflection-heading" class="mt-4 max-w-3xl">From an informative episode to a reviewable change.</h2>
+          <p class="intro max-w-3xl">Reflection lenses supply the questions. Evidence grounds the interpretation. Attribution identifies where a lesson belongs.</p>
+          <div class="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+            {mechanisms.map((item, i) => (
+              <div class="border-t border-border-strong pt-5"><p class="font-mono text-xs text-muted-foreground">{String(i + 1).padStart(2, '0')}</p><h3 class="mt-3 text-lg font-semibold">{item.title}</h3><p class="mt-3 text-sm leading-relaxed text-muted-foreground">{item.body}</p></div>
+            ))}
           </div>
-
-          <figure class="mt-12 overflow-hidden rounded-xl border border-border bg-card p-5 sm:p-8">
-            <div class="rounded-lg border border-border-strong bg-background p-5 sm:p-7">
-              <div class="flex flex-wrap items-center justify-between gap-3">
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                  Complete Value-Creation Capability · Cₜ
-                </p>
-                <p class="font-mono text-[10px] text-muted-foreground">
-                  people · capital · relationships · physical + digital assets
-                </p>
-              </div>
-
-              <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {
-                  companyAssets.map((asset) => (
-                    <div class="rounded border border-border bg-card px-4 py-3">
-                      <p class="font-mono text-xs font-semibold text-foreground">{asset.title}</p>
-                    </div>
-                  ))
-                }
-              </div>
-
-              <div class="my-5 flex flex-col items-center gap-1 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                <span aria-hidden="true" class="text-xl text-accent">↕</span>
-                <span>called · configured · governed</span>
-              </div>
-
-              <div class="rounded-lg border border-foreground bg-foreground p-5 text-background sm:p-6">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-background/50">
-                      Operating structure
-                    </p>
-                    <p class="mt-2 text-xl font-semibold">O → O* → Rₜ</p>
-                  </div>
-                  <p class="max-w-md text-sm leading-relaxed text-background/65">
-                    Describes how the organization works and how its assets are coordinated.
-                  </p>
-                </div>
-              </div>
-
-              <div class="my-5 flex flex-col items-center gap-1 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                <span aria-hidden="true" class="text-xl text-accent">↓</span>
-                <span>deterministic responsibility solidifies outward</span>
-              </div>
-
-              <div class="mx-auto max-w-md rounded-lg border border-accent/50 bg-accent/[0.08] p-4 text-center">
-                <code class="font-mono text-sm font-semibold text-foreground">
-                  deterministic(Rₜ) → software ∈ Cₜ
-                </code>
-              </div>
-            </div>
-            <figcaption class="mt-5 font-mono text-[11px] leading-relaxed text-muted-foreground">
-              Digital capability circulates through the Operating Model. It does not collapse into
-              it.
-            </figcaption>
-          </figure>
-
-          <div class="mt-8 overflow-hidden rounded-xl border border-border bg-card">
-            <div class="grid gap-px bg-border sm:grid-cols-2">
-              {
-                companyAssets.map((asset) => (
-                  <div class="bg-card p-5 sm:p-6">
-                    <h3 class="font-semibold text-foreground">{asset.title}</h3>
-                    <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{asset.relation}</p>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-
-          <div class="mt-8 rounded-lg border border-border-strong bg-background p-5 sm:p-6">
-            <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-              A practical boundary
-            </p>
-            <p class="mt-3 max-w-4xl text-sm leading-relaxed text-foreground/80">
-              The Operating Model describes how the organization works. A business specification
-              describes how the business must behave. The former is implemented for an agent
-              executor; the latter remains a human-readable requirement and an input to software
-              development. Conflating them makes Rₜ larger without making execution more reliable.
-            </p>
+          <div class="mt-12 rounded-xl border border-border bg-card p-6 sm:p-8">
+            <h3 class="text-xl font-semibold">Give each responsibility a suitable method.</h3>
+            <p class="mt-4 max-w-4xl leading-relaxed text-muted-foreground">Reflection concentrates on meaning. Deterministic tools verify exact evidence spans, source versions, and edit preconditions. Smaller models may assist ambiguous lookup and routine routing. A text match can locate evidence; it cannot by itself establish historical provenance or causality.</p>
           </div>
         </div>
       </section>
 
-      <section id="reflective-bootstrapping" class="border-b border-border bg-secondary/35">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-            <div>
-              <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                04 · Reflective Bootstrapping
-              </p>
-              <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Rₜ must be able to shrink.
-              </h2>
-              <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-                Trace, evidence, attribution, and candidate patches are agent work. Deciding what
-                judgment deserves authority, why it should be deposited, and which exception should
-                become precedent remains human work.
-              </p>
-              <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-                This does not eliminate dependence on people. It converts high-quality judgment
-                from a one-time expense into a reusable asset—and therefore raises the standard of
-                judgment required.
-              </p>
-            </div>
-
-            <div>
-              <div class="rounded-xl border border-border bg-card p-5 sm:p-7">
-                <div class="flex flex-wrap items-center gap-2 font-mono text-xs text-foreground">
-                  <span class="rounded border border-border bg-background px-2.5 py-2">Execution</span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-border bg-background px-2.5 py-2">Trace</span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-border bg-background px-2.5 py-2">Reflection</span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-border bg-background px-2.5 py-2">Attribution</span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-border bg-background px-2.5 py-2">Patch</span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-foreground bg-foreground px-2.5 py-2 text-background">
-                    Human review
-                  </span>
-                  <span class="text-accent">→</span>
-                  <span class="rounded border border-border bg-background px-2.5 py-2">
-                    Operating Model update
-                  </span>
-                </div>
-              </div>
-
-              <div class="mt-4 grid gap-3">
-                {
-                  reflectionOperations.map((operation) => (
-                    <div class="grid gap-3 rounded-lg border border-border bg-card p-5 sm:grid-cols-[2.5rem_0.7fr_1.3fr] sm:items-start">
-                      <span class="font-mono text-xs text-accent">{operation.number}</span>
-                      <div>
-                        <h3 class="font-semibold text-foreground">{operation.title}</h3>
-                        <p class="mt-1 text-xs leading-relaxed text-muted-foreground">{operation.trigger}</p>
-                      </div>
-                      <p class="text-sm leading-relaxed text-foreground/80">{operation.action}</p>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
+      <section id="human-review" class="research-section bg-foreground text-background" aria-labelledby="review-heading">
+        <div class="mx-auto max-w-6xl px-6">
+          <p class="eyebrow" style="color: color-mix(in oklab, var(--color-background) 65%, transparent)">04 · Human review</p>
+          <h2 id="review-heading" class="mt-4 max-w-3xl">Review governs learning.<br />It also brings knowledge back to people.</h2>
+          <div class="mt-10 grid gap-8 md:grid-cols-2">
+            <div class="border-t border-background/25 pt-6"><h3 class="text-xl font-semibold">Knowledge synchronization</h3><p class="mt-4 leading-relaxed text-background/75">The agent explains what happened, what it learned, and where the lesson applies. The reviewer learns about discoveries hidden behind the deliverable and adds domain context that can correct or refine the interpretation.</p></div>
+            <div class="border-t border-background/25 pt-6"><h3 class="text-xl font-semibold">Accountable adoption</h3><p class="mt-4 leading-relaxed text-background/75">People accept, narrow, defer, or reject a proposed change. A judgment deposit preserves the decision, rationale, evidence, scope, and accountable reviewer so future participants can understand and revisit it.</p></div>
           </div>
-
-          <div class="mt-10 rounded-lg border border-border-strong bg-background p-5 sm:p-6">
-            <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-              Coverage is not the governing metric
-            </p>
-            <p class="mt-3 max-w-4xl text-sm leading-relaxed text-foreground/80">
-              Rₜ is review-bandwidth constrained while O* drifts with reality. The meaningful
-              measure is their rate relationship, not a snapshot coverage percentage. A
-              high-coverage model that is six months stale is more dangerous than a smaller model
-              that remains synchronized, because stale rules are executed with perfect
-              consistency.
-            </p>
-          </div>
+          <p class="mt-10 max-w-3xl border-l-2 border-accent pl-6 text-xl leading-relaxed">The result is a reviewed change to the operating model and a better-informed person. An approval click alone does not demonstrate understanding.</p>
+          <p class="mt-8 max-w-3xl text-sm leading-relaxed text-background/60">Permissions, audit mechanisms, and human-controlled constitutional constraints remain outside reflective modification.</p>
         </div>
       </section>
 
-      <section class="border-b border-border">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              05 · Delegation boundary
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Expressible does not mean delegable.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Rₜ supplies the organization-specific methods, precedents, authority, and division of
-              labor that make delegation possible. It is necessary for institution-specific work,
-              but it is neither sufficient nor a container for execution. Eₜ is a runtime outcome
-              composed from representation, model priors, verification, and human response.
-            </p>
-          </div>
-
-          <div class="mt-10 overflow-x-auto overflow-y-hidden rounded-xl border border-foreground bg-foreground p-6 text-background sm:p-8">
-            <div
-              role="math"
-              aria-label="E sub t equals a function of R sub t, P sub t, V sub t, and H sub t."
-              class="min-w-max"
-            >
-              <code class="font-mono text-2xl font-semibold tracking-tight sm:text-4xl">
-                Eₜ = f(Rₜ, Pₜ, Vₜ, Hₜ)
-              </code>
-            </div>
-          </div>
-
-          <div class="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {
-              delegationInputs.map((input) => (
-                <div class="rounded-lg border border-border bg-card p-5">
-                  <span class="font-mono text-sm font-semibold text-accent">{input.symbol}</span>
-                  <h3 class="mt-4 font-semibold text-foreground">{input.title}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{input.body}</p>
-                </div>
-              ))
-            }
-          </div>
-
-          <div class="mt-8 grid gap-5 lg:grid-cols-2">
-            <p class="text-sm leading-relaxed text-muted-foreground">
-              The marginal value of representation is concentrated where organizational purpose is
-              not already supplied by Pₜ. As model priors improve, parts of Rₜ become redundant and
-              should be retired rather than carried forever. The Operating Model is therefore not a
-              permanent prompt library. It is the changing difference between what this institution
-              needs and what its executor already knows.
-            </p>
-            <p class="text-sm leading-relaxed text-muted-foreground">
-              Vₜ is often the harder constraint. A model that is correct nine times out of ten can
-              still have negative value when the tenth error is silent. Tests, schemas, typed tools,
-              reversible actions, regression cases, and observable business rules lower the
-              delegation threshold. Because correctness ultimately needs ground truth, this is
-              largely data and environment engineering—progress the organization can make without
-              waiting for a generally smarter model.
-            </p>
-          </div>
-
-          <div class="mt-12 grid gap-5 lg:grid-cols-2">
-            <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Delegation quality
-              </p>
-              <h3 class="mt-3 text-2xl font-semibold tracking-tight text-foreground">
-                Escalation precision
-              </h3>
-              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-                The agent must identify the delegation boundary at runtime. Failure has two
-                directions: crossing a boundary without escalation, and escalating so often that
-                judgment cost is pushed back to people. An agent that escalates everything is
-                perfectly safe and economically useless. Both precision and recall matter.
-              </p>
-            </div>
-            <div class="rounded-xl border border-border bg-card p-6 sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Representation quality
-              </p>
-              <h3 class="mt-3 text-2xl font-semibold tracking-tight text-foreground">
-                Rₜ is not monotonic
-              </h3>
-              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-                More rules create superlinear interaction costs: context competition, retrieval
-                failure, and contradiction. Beyond an optimal scale Rₜ*, another document can make
-                Eₜ smaller. Scope and routing mechanisms therefore matter more than document count.
-                Solidifying stable responsibilities has a double return: they leave the capability
-                boundary and free capacity for the rules that still require judgment.
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-12 overflow-hidden rounded-xl border border-border bg-card">
-            <div class="border-b border-border px-6 py-5">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                Three causes of the execution boundary
-              </p>
-            </div>
-            <div class="grid gap-px bg-border md:grid-cols-3">
-              {
-                executionBoundaries.map((boundary) => (
-                  <div class="bg-card p-6">
-                    <div class="flex items-center justify-between gap-3">
-                      <h3 class="font-semibold text-foreground">
-                        <span class="mr-2 font-mono text-accent">{boundary.symbol}</span>
-                        {boundary.title}
-                      </h3>
-                      <span class="rounded-full border border-border-strong px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                        {boundary.movement}
-                      </span>
-                    </div>
-                    <p class="mt-4 text-sm leading-relaxed text-muted-foreground">{boundary.body}</p>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-
-          <div class="mt-10 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <div class="rounded-lg border border-foreground bg-foreground p-5 text-background sm:p-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Idealized upper bound
-              </p>
-              <div
-                role="math"
-                aria-label="E sub t approaches the portion of R sub t assigned to the agent."
-                class="mt-4 overflow-x-auto overflow-y-hidden"
-              >
-                <code class="whitespace-nowrap font-mono text-lg font-semibold sm:text-xl">
-                  Eₜ → agent-assigned(Rₜ)
-                </code>
-              </div>
-              <p class="mt-4 text-sm leading-relaxed text-background/65">
-                Rₜ itself records the division of labor. Technology determines how much can be
-                realized inside the line; people decide where the line is drawn.
-              </p>
-            </div>
-            <div class="rounded-lg border border-border bg-secondary/35 p-5 sm:p-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Operational measure
-              </p>
-              <p class="mt-3 text-sm leading-relaxed text-foreground/80">
-                The sets are not directly measurable. Track human attention per unit of work:
-                decision-request frequency, manual corrections, context restatement, and patch
-                review time. The critical signal is their downward slope while outcome quality
-                remains stable.
-              </p>
-            </div>
-          </div>
-
-          <p class="mt-8 max-w-4xl text-sm leading-relaxed text-muted-foreground">
-            Division of labor must also be separated from discretion. Within a responsibility
-            already assigned to it, an agent may gain broad freedom to choose methods, sequence
-            work, and resolve familiar tradeoffs. Capability can move that internal boundary a long
-            way. It does not decide which responsibilities were assigned in the first place.
-          </p>
-        </div>
-      </section>
-
-      <section class="border-b border-border bg-foreground text-background">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-background/50">
-              06 · Invention under agent economics
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Existing organizations optimize for human costs.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-background/65 sm:text-lg">
-              The ceiling is not the portion of today’s organization that can be copied. Existing
-              operating models are local optima under expensive attention, lossy memory,
-              high-friction trust, synchronous coordination, and years-long capability transfer.
-              Agents alter those cost curves—and make previously uneconomical structures viable.
-            </p>
-          </div>
-
-          <div class="mt-12 grid gap-4 lg:grid-cols-2">
-            {
-              costShifts.map((shift) => (
-                <article class="rounded-xl border border-background/15 bg-background/[0.04] p-6 sm:p-7">
-                  <div class="flex items-start justify-between gap-4">
-                    <div>
-                      <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-background/45">
-                        Cost collapse {shift.number}
-                      </p>
-                      <h3 class="mt-3 text-xl font-semibold tracking-tight">{shift.title}</h3>
-                    </div>
-                    <span class="rounded border border-background/20 px-2 py-1 font-mono text-[10px] text-accent">
-                      {shift.shift}
-                    </span>
-                  </div>
-                  <p class="mt-6 text-sm leading-relaxed text-background/70">{shift.implication}</p>
-                  <div class="mt-5 border-t border-background/15 pt-5">
-                    <p class="font-mono text-[10px] uppercase tracking-[0.14em] text-background/40">
-                      Failure mode
-                    </p>
-                    <p class="mt-2 text-sm leading-relaxed text-background/60">{shift.failure}</p>
-                  </div>
-                </article>
-              ))
-            }
-          </div>
-
-          <div class="mt-8 grid gap-5 border-t border-background/15 pt-8 lg:grid-cols-2">
-            <p class="text-sm leading-relaxed text-background/65">
-              These gains are architectural. Near-zero observation turns aspiration into constraint;
-              replication removes layers built to fight communication loss; change makes
-              organization design testable; transfer makes capability distributable.
-            </p>
-            <p class="text-sm leading-relaxed text-background/65">
-              Each also removes hidden safety. Inconsistency limits a bad rule’s blast radius; slow
-              change stabilizes precedent; sampled review leaves room for exceptions. Agent-native
-              design must restore these functions through staged rollout, exception channels,
-              independent checks, change budgets, and cooldown periods.
-            </p>
-          </div>
-
-          <div class="mt-12 rounded-xl border border-accent/40 bg-accent/[0.08] p-6 sm:p-8">
-            <div class="grid gap-8 lg:grid-cols-[0.55fr_1.45fr]">
-              <div>
-                <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                  The prerequisite
-                </p>
-                <h3 class="mt-3 text-2xl font-semibold tracking-tight">Deposit requires ownership.</h3>
-              </div>
-              <div class="space-y-4 text-base leading-relaxed text-background/70">
-                <p>
-                  Wage employment pays repeatedly for capability attached to a person. Efficient
-                  extraction turns that exchange into a one-time transfer; after the method is
-                  deposited, the contributor’s marginal value can collapse.
-                </p>
-                <p>
-                  The rational response is shallow deposit: work gets done, but judgment, exception
-                  logic, and reasons never enter reflection. Normal outputs hide the loss.
-                </p>
-                <p class="font-medium text-background">
-                  People deposit deeply only when they retain a durable share in the value of what
-                  they deposit. The differentiator is not merely owning an Operating Model, but
-                  building an ownership structure in which people want to deepen it.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <p class="mt-8 max-w-4xl text-sm leading-relaxed text-background/60">
-            None of the four cost collapses bypasses delegation. Enforcing an unverified standard
-            only scales an untested judgment; experimentation without measurable effects becomes
-            random walk. Invention operates inside the region Eₜ can support, but changes the
-            institution rather than reproducing it.
-          </p>
-        </div>
-      </section>
-
-      <section class="border-b border-border bg-secondary/35">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              07 · Four paths
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Two paths approximate. One reconstructs. One migrates.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              The distinction is not difficulty but operator. Reflective Bootstrapping and model
-              progress approach an existing target. Redesign asks whether the target’s shape still
-              makes sense after the cost structure changes. Solidification changes the substrate
-              carrying a responsibility.
-            </p>
-          </div>
-
-          <div class="mt-12 grid gap-4 lg:grid-cols-2">
-            {
-              paths.map((path) => (
-                <article class="flex flex-col rounded-xl border border-border bg-card p-6 sm:p-7">
-                  <div class="flex items-start justify-between gap-3">
-                    <span class="font-mono text-xs text-accent">{path.number}</span>
-                    <span class="rounded-full border border-border-strong px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                      {path.operator}
-                    </span>
-                  </div>
-                  <h3 class="mt-6 text-xl font-semibold tracking-tight text-foreground">{path.title}</h3>
-                  <code class="mt-3 font-mono text-lg font-semibold text-foreground">{path.formula}</code>
-                  <p class="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                    Trigger · {path.trigger}
-                  </p>
-                  <p class="mt-6 text-sm leading-relaxed text-muted-foreground">{path.body}</p>
-                </article>
-              ))
-            }
-          </div>
-
-          <div class="mt-8 rounded-lg border border-border-strong bg-background p-5 sm:p-6">
-            <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-              A shared mechanism, three uses
-            </p>
-            <p class="mt-3 max-w-4xl text-sm leading-relaxed text-foreground/80">
-              Periodic whole-model review is simultaneously premise rechecking, cold-drift
-              governance, and Operating Model Redesign. Agents prepare global evidence and candidate
-              structures; people decide whether a rule is wrong—or whether the reason for having
-              that kind of rule has disappeared.
-            </p>
-          </div>
-
-          <div class="mt-8 grid gap-5 overflow-hidden rounded-xl border border-foreground bg-foreground p-6 text-background sm:p-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-            <div>
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-background/50">
-                The target quantity
-              </p>
-              <div
-                role="math"
-                aria-label="System-borne work equals D sub t plus E sub t."
-                class="mt-4 overflow-x-auto overflow-y-hidden"
-              >
-                <code class="whitespace-nowrap font-mono text-xl font-semibold tracking-tight sm:text-3xl">
-                  System-borne work = Dₜ + Eₜ
-                </code>
-              </div>
-            </div>
-            <div class="space-y-4 text-sm leading-relaxed text-background/65">
-              <p>
-                Dₜ is work carried by deterministic software. Eₜ is work reliably carried by an
-                agent. Maximizing Eₜ would perversely make solidification look like regression,
-                because a responsibility leaves Eₜ when it becomes code.
-              </p>
-              <p>
-                New work enters Eₜ while judgment and adaptation are still required. Mature work
-                settles into Dₜ, releasing agent capacity for the next frontier. Eₜ is best
-                understood as a throughput aperture through which uncertainty becomes durable
-                capability.
-              </p>
-            </div>
-          </div>
-
-          <p class="mt-8 max-w-4xl text-sm leading-relaxed text-muted-foreground">
-            Together the four paths form a cycle: redesign decides what the organization should be
-            able to do; reflection represents that purpose; model, environment, and discipline make
-            it executable; solidification moves the stable portion into deterministic software and
-            makes room for another round.
-          </p>
-        </div>
-      </section>
-
-      <section class="border-b border-border">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="max-w-3xl">
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              08 · The new company boundary
-            </p>
-            <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Certainty becomes copyable. Capacity to bear consequences does not.
-            </h2>
-            <p class="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              A company adds value beyond an individual through two historically bundled pillars.
-              Operating Model automation separates them.
-            </p>
-          </div>
-
-          <div class="mt-12 grid gap-px overflow-hidden rounded-xl border border-border bg-border lg:grid-cols-2">
-            <div class="bg-card p-6 sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Pillar 01 · Certainty
-              </p>
-              <h3 class="mt-4 text-2xl font-semibold tracking-tight text-foreground">
-                Predictable, repeatable, scalable outcomes.
-              </h3>
-              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-                Certainty comes from the Operating Model. Once represented, it can be inherited,
-                distributed, purchased, and executed without losing fidelity as scale grows. A small
-                team can run operating capability that once required a large hierarchy.
-              </p>
-            </div>
-            <div class="bg-card p-6 sm:p-8">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Pillar 02 · Liability capacity
-              </p>
-              <h3 class="mt-4 text-2xl font-semibold tracking-tight text-foreground">
-                The ability to absorb real consequences.
-              </h3>
-              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-                Capital, assets, legal structure, insurance, regulatory standing, longevity, and
-                brand as a durable guarantee belong to Cₜ. None can be obtained by copying an
-                Operating Model.
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-8 grid gap-5 lg:grid-cols-2">
-            <div class="rounded-lg border border-border bg-secondary/35 p-5 sm:p-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Accountability
-              </p>
-              <p class="mt-3 text-sm leading-relaxed text-foreground/80">
-                Who owns the judgment and its consequences. It is bound to decision rights and
-                ownership and cannot be transferred.
-              </p>
-            </div>
-            <div class="rounded-lg border border-border bg-secondary/35 p-5 sm:p-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Liability capacity
-              </p>
-              <p class="mt-3 text-sm leading-relaxed text-foreground/80">
-                How much an organization can pay and endure. It is bound to capital, legal
-                structure, insurance, and persistence, and can be priced or outsourced. Insurance
-                can pay for a decision; it cannot make the decision yours.
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-12 overflow-hidden rounded-xl border border-border bg-card">
-            <div class="border-b border-border px-5 py-4 sm:px-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                What remains differentiated in Cₜ
-              </p>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full min-w-[46rem] border-collapse text-left">
-                <thead class="bg-secondary/35 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                  <tr>
-                    <th class="px-5 py-3 font-medium">Asset</th>
-                    <th class="px-5 py-3 font-medium">Accumulates in operation</th>
-                    <th class="px-5 py-3 font-medium">Purchasable</th>
-                    <th class="px-5 py-3 font-medium">As models improve</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-border text-sm">
-                  {
-                    differentiatingAssets.map((item) => (
-                      <tr>
-                        <th class="px-5 py-4 font-semibold text-foreground">{item.asset}</th>
-                        <td class="px-5 py-4 text-muted-foreground">{item.accumulates}</td>
-                        <td class="px-5 py-4 text-muted-foreground">{item.purchasable}</td>
-                        <td class="px-5 py-4 text-muted-foreground">{item.modelEffect}</td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <p class="mt-8 max-w-4xl text-base leading-relaxed text-muted-foreground">
-            Data is unusual: it accumulates through real work, is usually unavailable for purchase,
-            and becomes more valuable as models improve. Trace is the mechanism that connects this
-            proprietary evidence back to organizational learning. An organization able to carry
-            greater liability also gains access to higher-value real-world work—and therefore to
-            data that smaller competitors cannot manufacture.
-          </p>
-
-          <blockquote class="mt-10 max-w-4xl border-l-2 border-accent pl-6 text-xl font-medium leading-relaxed text-foreground sm:text-2xl">
-            Competition shifts from who can organize certainty to who can bear the consequences—and
-            who accumulates data that cannot be bought.
-          </blockquote>
-
-          <p class="mt-6 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Large organizations lose part of their coordination premium but retain balance sheets,
-            regulatory capacity, and brands that guarantee persistence. Small owner-operator teams
-            can match organizational certainty and bind judgment to consequences more tightly, but
-            remain limited by the size of the liability they can carry and the work from which
-            proprietary data can be earned. Once the Operating Model becomes copyable, what remains
-            outside it becomes the reason the company still exists.
-          </p>
-        </div>
-      </section>
-
-      <section class="border-b border-border bg-secondary/35">
-        <div class="mx-auto max-w-6xl px-6 py-20 lg:py-24">
-          <div class="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-            <div>
-              <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-                09 · Human attention
-              </p>
-              <h2 class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Scarcity determines the human role.
-              </h2>
-              <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-                Human attention constrains both learning speed and execution reliability. The goal
-                is not simply to use less of it. As Dₜ + Eₜ carries more production, attention
-                should move toward the work where its marginal value compounds.
-              </p>
-            </div>
-
-            <div class="grid gap-3">
-              {
-                attentionUses.map((use, index) => (
-                  <div class="grid gap-3 rounded-lg border border-border bg-card p-5 sm:grid-cols-[2.5rem_0.7fr_1.3fr] sm:items-start">
-                    <span class="font-mono text-xs text-accent">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <div>
-                      <h3 class="font-semibold text-foreground">{use.title}</h3>
-                      <p class="mt-1 text-xs leading-relaxed text-muted-foreground">{use.body}</p>
-                    </div>
-                    <p class="text-sm leading-relaxed text-foreground/80">{use.direction}</p>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-
-          <div class="mt-10 grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
-            <p class="text-base leading-relaxed text-muted-foreground">
-              Execution and restatement are repeated expenses. Deposit is leverage: one high-quality
-              judgment can influence every future relevant execution, and its stable portion can
-              eventually settle into deterministic code. The saved attention should fund better
-              observation, reasoning, relationship-building, direction-setting, and new value
-              creation—not lower-quality human involvement.
-            </p>
-            <div class="rounded-lg border border-foreground bg-foreground p-5 text-background sm:p-6">
-              <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-                Outside the allocation problem
-              </p>
-              <p class="mt-3 text-sm leading-relaxed text-background/70">
-                Final accountability is not another optional use of attention. It is a
-                non-transferable obligation attached to judgment and consequence.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="border-b border-border">
-        <div class="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[0.55fr_1.45fr] lg:py-28">
+      <section id="rb-skill" class="research-section" aria-labelledby="skill-heading">
+        <div class="section-grid">
+          <p class="eyebrow">05 · Put it to work</p>
           <div>
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              Conclusion
-            </p>
-          </div>
-          <div class="max-w-3xl">
-            <h2 class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Toward the executable institution.
-            </h2>
-            <p class="mt-6 text-lg leading-relaxed text-muted-foreground">
-              The inheritance view is table stakes: without it, an organization cannot preserve or
-              delegate what it already knows. The invention view is the source of advantage: it
-              redesigns the institution around costs that no longer apply. Neither view implies
-              that the Operating Model is the company’s total digital capability.
-            </p>
-            <p class="mt-5 text-lg leading-relaxed text-muted-foreground">
-              The executable institution learns through Rₜ, acts through Eₜ, and turns mature
-              behavior into Dₜ. Its Operating Model coordinates data and systems without absorbing
-              them. Human attention leaves repetition for exploration, judgment, relationships, and
-              new value creation, while accountability remains where real consequences land.
-            </p>
-            <div class="mt-9">
-              <a
-                href="https://github.com/airicdev"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center rounded-md bg-foreground px-5 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
-              >
-                Follow Airic on GitHub ↗
-              </a>
+            <h2 id="skill-heading">Give your agent an RB skill.</h2>
+            <p class="intro">Reflect on a completed task while the experience is still available, or use a saved trajectory.</p>
+            <p>The skill guides the agent through Observe → Reflect → Attribute → Propose → Synchronize → Revisit. It produces evidence-grounded lessons and scoped changes for you to review.</p>
+            <a class="button-primary mt-6" href="/research/rb-skill.md" download="SKILL.md">Download the RB skill <span aria-hidden="true">↓</span></a>
+            <div class="mt-8 rounded-xl border border-border bg-card p-6">
+              <h3 class="text-lg font-semibold">Start with the work you just did.</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted-foreground">Give the skill to an agent with access to the task context, then ask:</p>
+              <blockquote class="mt-4 border-l-2 border-accent pl-4 text-base leading-relaxed">Use Reflective Bootstrapping to reflect on this task. Identify what we learned and prepare improvement proposals for my review.</blockquote>
+              <p class="mt-4 text-sm leading-relaxed text-muted-foreground">Review the evidence, interpretation, and scope before accepting persistent changes. Later work tests the lesson and can improve the reflection method itself.</p>
             </div>
+            <p class="text-sm">A host system supplies trajectory capture and incorporation. The skill preserves uncertainty and human acceptance; empirical evaluation is pending.</p>
           </div>
         </div>
       </section>
@@ -1276,3 +143,18 @@ const attentionUses = [
   </main>
   <Footer />
 </MarketingLayout>
+
+<style>
+  .research-section { padding-block: 5rem; border-bottom: 1px solid var(--color-border); scroll-margin-top: 5rem; }
+  .section-grid { max-width: 72rem; margin-inline: auto; padding-inline: 1.5rem; display: grid; gap: 2rem; }
+  .eyebrow { font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--color-muted-foreground); }
+  h2 { font-size: clamp(1.875rem, 3.4vw, 2.5rem); font-weight: 600; line-height: 1.16; letter-spacing: -0.025em; }
+  .intro { margin-top: 1.5rem; font-size: 1.125rem; line-height: 1.7; color: var(--color-muted-foreground); }
+  .section-grid > div > p:not(.eyebrow):not(.intro) { margin-top: 1.25rem; line-height: 1.8; color: var(--color-muted-foreground); }
+  .button-primary, .button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; border-radius: 0.5rem; padding: 0.875rem 1.125rem; font-size: 0.875rem; font-weight: 500; line-height: 1.35; }
+  .button-primary { color: var(--color-background); background: var(--color-foreground); }
+  .button-secondary { border: 1px solid var(--color-border-strong); }
+  .button-primary:hover, .button-secondary:hover { opacity: 0.8; }
+  a:focus-visible { outline: 2px solid var(--color-foreground); outline-offset: 5px; }
+  @media (min-width: 1024px) { .research-section { padding-block: 6rem; } .section-grid { grid-template-columns: 0.55fr 1.45fr; gap: 3rem; } }
+</style>
